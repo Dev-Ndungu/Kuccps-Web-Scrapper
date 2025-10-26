@@ -1,0 +1,559 @@
+$(document).ready(function (event) {
+    // global
+    $('.input-daterange-timepicker').daterangepicker({
+        timePicker: true,
+        locale: {
+            format: 'DD/MM/YYYY hh:mm A'
+        },
+        timePickerIncrement: 10,
+        timePicker12Hour: true,
+        timePickerSeconds: false,
+        buttonClasses: ['btn', 'btn-sm'],
+        applyClass: 'btn-danger',
+        cancelClass: 'btn-inverse'
+    });
+
+    // initialise dataTablss
+    $('#stInsTable').DataTable();
+    $('#stInsProgTable').DataTable();
+    // create table rows into into links
+    $(document).on('click', '.row-link', function () {
+        window.location = $(this).data("href")
+    });
+
+    //timer
+    $.ajax({url: '/timer/', type: 'GET'}).done(function (response) {
+        $('#timer').countdown(response['end'], function (e) {
+            $(this).text(e.strftime('%D days %H hrs %M mins %S secs'));
+        });
+    });
+
+
+    //transferTimer
+    $.ajax({url: '/timer/?transfer=1', type: 'GET'}).done(function (response) {
+        console.log(response);
+        $('#transferTimer').countdown(response['end'], function (e) {
+            $(this).text(e.strftime('%D days %H hrs %M mins %S secs'));
+        });
+    });
+
+
+    // dropify
+    $('.dropify').dropify();
+
+
+    //staff
+    $('.dTable').DataTable();
+    $('.btnTable').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend:    'copyHtml5',
+                text:      '<i class="fa fa-files-o"></i>',
+                titleAttr: 'Copy'
+            },
+            {
+                extend:    'excelHtml5',
+                text:      '<i class="fa fa-file-excel-o"></i>',
+                titleAttr: 'Excel'
+            },
+            {
+                extend:    'csvHtml5',
+                text:      '<i class="fa fa-file-text-o"></i>',
+                titleAttr: 'CSV'
+            },
+            {
+                extend:    'pdfHtml5',
+                text:      '<i class="fa fa-file-pdf-o"></i>',
+                titleAttr: 'PDF'
+            }
+        ]
+    } );
+
+    // fetch capacities
+    function $getCycleCap($cycle, $instCode) {
+        $.ajax({
+            url: '/api/',
+            type: 'GET',
+            data: {cap_cycle: $cycle, inst_code: $instCode},
+            beforeSend: function () {
+                $('#capacities div.preloader').css('display', 'block');
+            },
+            complete: function () {
+                $('#capacities div.preloader').css('display', 'none');
+            }
+        }).done(function (response) {
+            dataObj = JSON.parse(response);
+            var $tableBody = $('#instProgCap tbody');
+            var $markup;
+            $tableBody.empty();
+            if (dataObj.length !== 0) {
+                $.each(dataObj, function (obj) {
+                    prog = dataObj[obj];
+                    $markup = "<tr><td>" + (obj + 1) + "</td>" +
+                        "<td>" + prog['programme_code'] + "</td>" +
+                        "<td>" + prog['programme_name'] + "</td>" +
+                        "<td class='text-center'>" + prog['declared_capacity'] + "</td>" +
+                        "<td class='text-center bg-theme-dark text-white'>" + prog['approved_capacity'] + "</td>" +
+                        "<td>" + prog['last_update'] + "</td>" +
+                        "</tr>";
+                    $tableBody.append($markup)
+                })
+            } else {
+                // $tableBody.parent().hide();
+                $markup = "<td colspan='5' class=\"alert alert-warning text-center\">No Capacity Declared for " + $capSelect.find(':selected').text() + "</td>";
+                $tableBody.append($markup);
+            }
+        }).fail(function (error) {
+        });
+    }
+
+    var $capSelect = $('#capCycleSelect');
+    var $cycleId = $capSelect.find(':selected').attr('value');
+    var $instId = $capSelect.attr('datasrc');
+    var $capTitle = $('.capTitle');
+    $capTitle.text($capSelect.find(':selected').text());
+    $getCycleCap($cycleId, $instId);
+
+    $capSelect.on('change', function (e) {
+        $cycleID = $(this).find(":selected").attr('value');
+        $getCycleCap($cycleID, $instId);
+        $capTitle.text($capSelect.find(':selected').text());
+    });
+
+    //publish capacities
+    var $publishBtn = $('.capPublish');
+    $publishBtn.click(function (e) {
+        e.preventDefault();
+        var $instCode = $(this).data('href');
+        console.log($instCode);
+        $.ajax({
+            url: '/api/',
+            type: 'POST',
+            data: {_publish: '', inst_code: $instCode}
+        });
+    });
+
+    // publish new programes
+    var $newProgClass = $('.new-publish');
+    $newProgClass.click(function (e) {
+        let $this = $(this);
+        var $progCode = $(this).data('href');
+        $.ajax({
+            url: '/api/',
+            type: 'POST',
+            data: {_new_prog: true, new_code: $progCode}
+        }).done(function (response) {
+            let $text = ($progCode + ' published');
+            $('#notifications').empty().append('<div class="well well well-success-outline">'+ $text + '</div>');
+            $this.closest('tr').remove();
+        })
+    });
+
+
+    //schools
+    var $uploadForm = $('#school-upload-form');
+    $('#school-upload-toggle').click(function () {
+        $uploadForm.toggleClass('hidden')
+    });
+
+    var $schoolForm = $('#school-form');
+    $schoolForm.submit(function (e) {
+        e.preventDefault();
+        // Validating Message
+        swal({
+            text: 'Validating...',
+            onOpen: function () {
+                swal.showLoading()
+            }
+        });
+        // get school form data
+        var $formData = $(this).serializeArray();
+        var $data = {};
+        $.each($formData, function (obj) {
+            var $key = $formData[obj]["name"];
+            var $value = $formData[obj]["value"];
+            $data[$key] = $value
+        });
+        $data['school_form'] = true;
+        // Send data to server
+        $.ajax({
+            url: '/register/',
+            method: 'GET',
+            data: $data
+        }).done(function (response) {
+            if (response['validation']) {
+                swal.close();
+                // hide step one
+                $('#step-one').addClass('hidden');
+                $('#step-one-title').removeClass('active');
+                // show step two
+                $('#step-two').removeClass('hidden');
+                $('#step-two-title').addClass('active');
+                $('#step-two').children('h4.box-title').text('Creating User for ' + response['message'])
+            } else {
+                swal('Error!', response['message'], 'error');
+            }
+        }).fail(function (error) {
+            swal('Error!', error['statusText'], 'error');
+        });
+    });
+
+
+    // user form
+    var $userForm = $('#user-form');
+    var $alertBox = $('#pass-alert');
+
+
+    $userForm.submit(function (e) {
+        e.preventDefault();
+        var $password = $('#id_password').val();
+        var $repeatPassword = $('#id_repeat_password').val();
+        // $alertBox.empty();
+        if ($password.length < 6) {
+            console.log($password);
+            $alertBox.removeClass('hidden').text('Please input a stronger password and submit again')
+        } else if ($password !== $repeatPassword) {
+            $alertBox.removeClass('hidden').text('Passwords don\'t match. Input matching passwords to proceed')
+        } else {
+            $alertBox.addClass('hidden');
+            // loading message
+            swal({
+                text: 'Creating Account...',
+                onOpen: function () {
+                    swal.showLoading()
+                }
+            });
+            var $formData = $(this).serializeArray();
+            var $data = {};
+            $.each($formData, function (obj) {
+                var $key = $formData[obj]["name"];
+                var $value = $formData[obj]["value"];
+                $data[$key] = $value
+            });
+            $data['center_code'] = $('#id_center_code').val();
+            $data['user_form'] = true;
+            // Send data to server
+            $.ajax({
+                url: '/register/',
+                method: 'POST',
+                data: $data
+            }).done(function (response) {
+                swal.close();
+                swal('Account Created', response['message'], 'success');
+                window.location.replace = '/'
+            }).fail(function (error) {
+                swal('Error!', error['statusText'], 'error');
+            });
+        }
+    });
+
+    $uploadForm.submit(function (e) {
+        swal({
+            text: 'Uploading and saving students contacts...',
+            onOpen: function () {
+                swal.showLoading()
+            }
+        });
+        e.preventDefault();
+        var $formData = new FormData($uploadForm.get(0));
+        $.ajax({
+            url: $uploadForm.attr('action'),
+            type: $uploadForm.attr('method'),
+            data: $formData,
+            processData: false,
+            contentType: false
+        }).done(function (response) {
+            swal.close();
+            var $totalCost = 0;
+            // clear the form
+            $uploadForm[0].reset();
+            if (!response['status']) {
+                swal('Error!', response['text'], 'error');
+            } else {
+                var $table = $('#upload-results');
+                $('.dimmer').removeClass('hidden');
+                $('.upload-container').removeClass('hidden');
+                $table.find('tbody').empty();
+
+                var $data = response['data'];
+                $.each($data, function (st) {
+                    var $markup;
+                    var $studentData = $data[st];
+                    for (var $studentId in $studentData) {
+                        var $biodata = $studentData[$studentId]['biodata'];
+                        var $degree = $studentData[$studentId]['degree'];
+                        var $diploma = $studentData[$studentId]['diploma'];
+                        var $certificate = $studentData[$studentId]['certificate'];
+                        var $artisan = $studentData[$studentId]['artisan'];
+                        var $cost = $studentData[$studentId]['cost'];
+                        var $paid = $studentData[$studentId]['paid'];
+                        var $applied = $studentData[$studentId]['applied'];
+
+                        $markup = "<tr>" +
+                            "<th class='p-7'>" + (st + 1) + " </th>" +
+                            "<th class='p-7'>" + $studentId + "</th>" +
+                            "<th class='p-7'>" + $biodata['name'] + "</th>" +
+                            // "<th class='p-7'>" + $biodata['post_box'] + "</th>" +
+                            // "<th class='p-7'>" + $biodata['postal_code'] + "</th>" +
+                            // "<th class='p-7'>" + $biodata['postal_town'] + "</th>" +
+                            "<th class='p-7'>" + $biodata['phone'] + "</th>" +
+                            "<th class='p-7'>" + $biodata['email'] + "</th>" +
+
+                            "<td class='p-7 " + $degree['1a'][1] + "'>" + $degree['1a'][0] + "</td>" +
+                            "<td class='p-7 " + $degree['1b'][1] + "'>" + $degree['1b'][0] + "</td>" +
+                            "<td class='p-7 " + $degree['1c'][1] + "'>" + $degree['1c'][0] + "</td>" +
+                            "<td class='p-7 " + $degree['2'][1] + "'>" + $degree['2'][0] + "</td>" +
+                            "<td class='p-7 " + $degree['3'][1] + "'>" + $degree['3'][0] + "</td>" +
+                            "<td class='p-7 " + $degree['4'][1] + "'>" + $degree['4'][0] + "</td>" +
+                            "<td class='p-7 " + $diploma['1'][1] + "'>" + $diploma['1'][0] + "</td>" +
+                            "<td class='p-7 " + $diploma['2'][1] + "'>" + $diploma['2'][0] + "</td>" +
+                            "<td class='p-7 " + $diploma['3'][1] + "'>" + $diploma['3'][0] + "</td>" +
+                            "<td class='p-7 " + $diploma['4'][1] + "'>" + $diploma['4'][0] + "</td>" +
+                            "<td class='p-7 " + $certificate['1'][1] + "'>" + $certificate['1'][0] + "</td>" +
+                            "<td class='p-7 " + $certificate['2'][1] + "'>" + $certificate['2'][0] + "</td>" +
+                            "<td class='p-7 " + $certificate['3'][1] + "'>" + $certificate['3'][0] + "</td>" +
+                            "<td class='p-7 " + $certificate['4'][1] + "'>" + $certificate['4'][0] + "</td>" +
+                            "<td class='p-7 " + $artisan['1'][1] + "'>" + $artisan['1'][0] + "</td>" +
+                            "<td class='p-7 " + $artisan['2'][1] + "'>" + $artisan['2'][0] + "</td>" +
+                            "<td class='p-7 " + $artisan['3'][1] + "'>" + $artisan['3'][0] + "</td>" +
+                            "<td class='p-7 " + $artisan['4'][1] + "'>" + $artisan['4'][0] + "</td>" +
+                            "<td class='p-7'>" + $cost + "</td>" +
+                            "<td class='p-7 " + getTdBgClass($paid) + "' id='" + $studentId + "' data-mode='" + $applied + "'><strong>" + $paid + "</strong></td>" +
+                            "</tr>";
+                        $totalCost += $cost;
+                        $table.find('tbody').append($markup)
+                    }
+                });
+                $('#total-cost').append("<sup>KShs </sup>" + $totalCost.toLocaleString('en'));
+            }
+        }).fail(function (error) {
+            swal.close();
+            swal('Error!', error['statusText'], 'error')
+        })
+    });
+
+    var $paymentForm = $('#school-payment');
+    $paymentForm.submit(function (e) {
+        swal({
+            text: 'Validating Payments...',
+            onOpen: function () {
+                swal.showLoading()
+            }
+        });
+        e.preventDefault();
+        var $codes = $paymentForm.find('input').val();
+        $.ajax({
+            url: $paymentForm.attr('action'),
+            type: $paymentForm.attr('method'),
+            data: {school_payment: true, codes: $codes}
+        }).done(function (response) {
+            var $table = $('#codes-table tbody');
+            var $tableHeader = $('#codes-table thead');
+            $table.empty();
+            $tableHeader.empty();
+            $tableHeader.append("<tr class='text-white'><th class='p-7 text-white'>MPESA CODE</th><th class='p-7 text-white'>AVAILABLE AMOUNT</th><th class='p-7'></th></tr>");
+            $.each(response, function (i) {
+                var $data = response[i];
+                for (var $code in $data) {
+                    var $ap = null;
+                    if (!isNaN($data[$code]) && $data[$code] >= 500) {
+                        $ap = "<button id='" + $code + "' class='label label-success label-rounded apply-payment'>Apply Payment</button>"
+                    }
+                    var $markup = "<tr class='text-white'><td class='p-7'>" + $code + "</td><td class='p-7'>" + Number($data[$code]).toLocaleString('en') + "</td><td class='p-7'>" + $ap + "</td></tr>";
+                    $table.append($markup);
+                }
+            });
+            swal.close();
+        })
+    });
+
+    $applyPayment = $('.apply-payment');
+    $(document).on('click', '.apply-payment', function (e) {
+        swal({
+            text: 'Applying Payments...',
+            onOpen: function () {
+                swal.showLoading()
+            }
+        });
+        e.preventDefault();
+        // get the payment code
+        var $paymentId = $(this).attr('id');
+        var $appliedStudents = [];
+        // get the students that applied and paid
+        $table = $('#upload-results tbody');
+        $table.find('tr').each(function (i) {
+            var $tds = $(this).find('td'), $applied = $tds.eq(19).data('mode'), $student = $tds.eq(19).attr('id'), $paid = $tds.eq(19).text();
+            // if the student and has not paid
+            if ($applied && $paid === 'false') {
+                $appliedStudents.push($student)
+            }
+        });
+
+        $.ajax({
+            url: '.',
+            method: 'POST',
+            data: {apply_payment: true, payment: $paymentId, students: JSON.stringify($appliedStudents)}
+        }).done(function (response) {
+            $.each(response, function (k, v) {
+                $('#' + k).html("<strong>" + v + "</strong>").removeClass('danger').addClass(getTdBgClass(v))
+            });
+            // refresh payments
+            $paymentForm.submit();
+            swal.close();
+        })
+    });
+
+    $saveApplication = $('#save-application');
+    $saveApplication.click(function () {
+        // get all of the students that paid and their application
+        var $uploadTable = $('#upload-results tbody');
+        var $applications = [];
+        $uploadTable.find('tr').each(function (i) {
+            var $tds = $(this).find('td'), $applied = $tds.eq(19).data('mode'), $student = $tds.eq(19).attr('id'), $paid = $tds.eq(19).text(),
+                $dg1a = $tds.eq(0).text(), $dg1b = $tds.eq(1).text(), $dg1c = $tds.eq(2).text(), $dg2 = $tds.eq(3).text(), $dg3 = $tds.eq(4).text(), $dg4 = $tds.eq(5).text(),
+                $dp1 = $tds.eq(6).text(), $dp2 = $tds.eq(7).text(), $dp3 = $tds.eq(8).text(), $dp4 = $tds.eq(9).text(),
+                $cp1 = $tds.eq(10).text(), $cp2 = $tds.eq(11).text(), $cp3 = $tds.eq(12).text(),$cp4 = $tds.eq(13).text(),
+                $ap1 = $tds.eq(14).text(), $ap2 = $tds.eq(15).text(), $ap3 = $tds.eq(16).text(),$ap4 = $tds.eq(17).text()
+            ;
+            // if the student applied and has  paid
+            if ($applied && $paid === 'true') {
+                var $application = {};
+                $application[$student] = {};
+                $application[$student]['degree'] = {'1a': $dg1a, '1b': $dg1b, '1c': $dg1c, '2': $dg2, '3': $dg3, '4': $dg4};
+                $application[$student]['diploma'] = {'1': $dp1, '2': $dp2, '3': $dp3, '4': $dp4};
+                $application[$student]['certificate'] = {'1': $cp1, '2': $cp2, '3': $cp3, '4': $cp4};
+                $application[$student]['artisan'] = {'1': $ap1, '2': $ap2, '3': $ap3, '4': $ap4};
+                $applications.push($application);
+            }
+        });
+        
+        for ($app in $applications) {
+            var $count = $applications.indexOf($app) + 1;
+
+            $.ajax({
+                url: '.',
+                type: 'POST',
+                data: {final_step: true, student_application: JSON.stringify($applications[$app])},
+                beforeSend: function () {
+                    swal({
+                        text: 'Saving ' + $count + ' of ' + $applications.length,
+                        onOpen: function () {
+                            swal.showLoading()
+                        }
+                    })
+                }
+            }).done(function () {
+                swal.close();
+            });
+        }
+
+    });
+
+
+    // utility functions
+    function getTdBgClass(value) {
+        if (value) {
+            return 'success'
+        } else {
+            return 'danger'
+        }
+    }
+
+    $.ajaxSetup({
+        headers: {"X-CSRFToken": getCookie("csrftoken")}
+    });
+
+    function getCookie(c_name) {
+        if (document.cookie.length > 0) {
+            c_start = document.cookie.indexOf(c_name + "=");
+            if (c_start != -1) {
+                c_start = c_start + c_name.length + 1;
+                c_end = document.cookie.indexOf(";", c_start);
+                if (c_end == -1) c_end = document.cookie.length;
+                return unescape(document.cookie.substring(c_start, c_end));
+            }
+        }
+        return "";
+    }
+});
+/**
+ * cbpFWTabs.js v1.0.0
+ * http://www.codrops.com
+ *
+ * Licensed under the MIT license.
+ * http://www.opensource.org/licenses/mit-license.php
+ *
+ * Copyright 2014, Codrops
+ * http://www.codrops.com
+ */
+(function (window) {
+
+    'use strict';
+
+    function extend(a, b) {
+        for (var key in b) {
+            if (b.hasOwnProperty(key)) {
+                a[key] = b[key];
+            }
+        }
+        return a;
+    }
+
+    function CBPFWTabs(el, options) {
+        this.el = el;
+        this.options = extend({}, this.options);
+        extend(this.options, options);
+        this._init();
+    }
+
+    CBPFWTabs.prototype.options = {
+        start: 0
+    };
+
+    CBPFWTabs.prototype._init = function () {
+        // tabs elems
+        this.tabs = [].slice.call(this.el.querySelectorAll('nav > ul > li'));
+        // content items
+        this.items = [].slice.call(this.el.querySelectorAll('.content-wrap > section'));
+        // current index
+        this.current = -1;
+        // show current content item
+        this._show();
+        // init events
+        this._initEvents();
+    };
+
+    CBPFWTabs.prototype._initEvents = function () {
+        var self = this;
+        this.tabs.forEach(function (tab, idx) {
+            tab.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                self._show(idx);
+            });
+        });
+    };
+
+    CBPFWTabs.prototype._show = function (idx) {
+        if (this.current >= 0) {
+            this.tabs[this.current].className = this.items[this.current].className = '';
+        }
+        // change current
+        this.current = idx != undefined ? idx : this.options.start >= 0 && this.options.start < this.items.length ? this.options.start : 0;
+        this.tabs[this.current].className = 'tab-current';
+        this.items[this.current].className = 'content-current';
+    };
+
+    // add to global namespace
+    window.CBPFWTabs = CBPFWTabs;
+
+})(window);
+
+(function () {
+
+    [].slice.call(document.querySelectorAll('.sttabs')).forEach(function (el) {
+        new CBPFWTabs(el);
+    });
+
+})();
+

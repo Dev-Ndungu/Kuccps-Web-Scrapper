@@ -1,0 +1,1120 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+            m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-92169722-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+
+     <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'G-HH9L4VKGWT', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8">
+    
+        <title>KUCCPS | The Placement Service</title>
+    
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <!-- fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Codystar|Orbitron" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Ionicons -->
+    
+    <!-- Theme style -->
+    <!-- Bootstrap Core CSS -->
+    <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Themefy -->
+    <link href="https://cdn.jsdelivr.net/npm/lt-themify-icons@1.1.0/themify-icons.min.css" rel="stylesheet">
+    <!-- Menu CSS -->
+    <link href="/assets/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.css" rel="stylesheet">
+    <!-- toast CSS -->
+    <link href="/assets/plugins/bower_components/toast-master/css/jquery.toast.css" rel="stylesheet">
+    <!-- morris CSS -->
+    
+    <!-- animation CSS -->
+    <link href="/assets/css/animate.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <!-- color CSS -->
+    <link href="/assets/css/colors/default-dark.css"  rel="stylesheet">
+    <!-- datatables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.5.2/css/buttons.bootstrap.min.css">
+    <!-- select boxes -->
+    <link href="/assets/plugins/bower_components/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+    <!-- datepicker -->
+    <link href="/assets/plugins/bower_components/timepicker/bootstrap-timepicker.min.css" rel="stylesheet">
+    <link href="/assets/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+    <!-- file upload -->
+    <link href="/assets/plugins/bower_components/dropify/dist/css/dropify.min.css" rel="stylesheet">
+    <!-- Select 2-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Include stylesheet -->
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet" />
+
+    
+    
+    <!-- Include Editor style. -->
+    
+    <link href='/assets/css/froala_editor.pkgd.min.css' rel='stylesheet' type='text/css' />
+    
+    <link href='/assets/css/froala_style.min.css' rel='stylesheet' type='text/css' />
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <!-- Freshchat widget -->
+    <script>
+        function initFreshChat() {
+            window.fcWidget.init({
+                token: "201a212b-6bee-4d7e-8a29-ecce52190bfe",
+                host: "https://wchat.freshchat.com"
+            });
+        }
+        function initialize(i,t){var e;i.getElementById(t)?initFreshChat():((e=i.createElement("script")).id=t,e.async=!0,e.src="https://wchat.freshchat.com/js/widget.js",e.onload=initFreshChat,i.head.appendChild(e))}function initiateCall(){initialize(document,"freshchat-js-sdk")}window.addEventListener?window.addEventListener("load",initiateCall,!1):window.attachEvent("load",initiateCall,!1);
+    </script>
+    <![endif]-->
+    <style>
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,500,600,700');
+        body, app-root {
+            font-family: 'Open Sans', sans-serif !important;
+            font-weight: 500 !important;
+            /*font-size: 13px !important;*/
+        }
+
+
+        .row-link,.capPublish{
+            cursor: pointer;
+        }
+        .bg-light-grey {
+            background-color: #f5f5f5 !important;
+        }
+        .bg-dark-grey{
+            background-color: #505050 !important;
+        }
+        .p-7 {
+            padding: 7px!important;
+        }
+        .timer-container{
+            position: fixed;
+            z-index: 9999;
+            bottom: 0;
+            left: 50%;
+        }
+        .sys-timer{
+            position: relative;
+            left: -50%;
+            padding: .3em .5em;
+            min-width: 30em;
+        }
+        .upload-container{
+            position: absolute;
+            z-index: 9999;
+            top: 5%;
+            left: 1%;
+            width: 98%;
+            height: 90%;
+        }
+        .dimmer{
+            position:fixed;
+            padding:0;
+            margin:0;
+
+            top:0;
+            left:0;
+
+            width: 100%;
+            height: 100%;
+            background: rgba(37, 37, 37, 0.5);
+        }
+        .swal2-container{
+            z-index: 99999 !important;
+        }
+
+        .well-success-outline{
+            border: 1px solid #bfe0bf;
+            border-radius: 6px;
+            background: #ecfeec;
+            color: #217e22;
+        }
+        .well-info-outline{
+            border: 1px solid #36abe0;
+            border-radius: 6px;
+            background: #c3f4fe;
+            color: #192e7e;
+        }
+
+        .well-error-outline {
+            border: 1px solid #e02e1f;
+            border-radius: 6px;
+            background: #fed5d3;
+            color: #7e3136;
+        }
+        .well-warning-outline {
+            border: 1px solid #e09e08;
+            border-radius: 6px;
+            background: #fef79b;
+            color: #7e6d11;
+        }
+
+        .well-default-outline {
+            border-radius: 6px;
+        }
+        .well-no-margin{
+            margin: 0 !important;
+        }
+
+        a[href="https://www.froala.com/wysiwyg-editor?k=u"] {
+            display: none !important;
+            position: absolute;
+            top: -99999999px;
+        }
+
+        .nav-tabs>li.active>a, .nav-tabs>li.active>a:focus, .nav-tabs>li.active>a:hover {
+            text-decoration-line: overline;
+        }
+        .basket-count:after{
+            content: attr(data-count);
+            position: absolute;
+            background: #009688;
+            height: 2rem;
+            top: -1rem;
+            right: -0.1rem;
+            width: 2rem;
+            text-align: center;
+            line-height: 1.7rem;
+            font-size: 1rem;
+            border-radius: 50%;
+            color: white;
+            border: 1px solid #607D8B;
+            font-family: 'Open Sans', sans-serif !important;
+            font-weight: 700;
+        }
+        td {
+            padding: 7px!important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="preloader">
+    <div class="cssload-speeding-wheel"></div>
+</div>
+<div id="wrapper">
+    
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top m-b-0">
+        <div class="navbar-header"> <a class="navbar-toggle hidden-sm hidden-md hidden-lg " href="javascript:void(0)" data-toggle="collapse" data-target=".navbar-collapse"><i class="fa fa-bars"></i></a>
+            <div class="top-left-part" style="background-color: white;">
+                <a class="logo" href="/">
+                    <b>
+                    <span class="hidden-xs p-l-10">
+                        <img src="/assets/img/LOGO.png" alt="home" height="35px" />
+                    </span>
+                        <span class="hidden-md hidden-lg hidden-sm p-l-10">
+                        <img src="/assets/img/LOGO.png" alt="home" height="25px" />
+                    </span>
+                    </b>
+                </a>
+            </div>
+            <ul class="nav navbar-top-links navbar-left hidden-xs">
+                <li><a href="javascript:void(0)" class="open-close hidden-xs waves-effect waves-light"><i class="icon-arrow-left-circle ti-menu"></i></a></li>
+                <!--
+                <li>
+                    <form role="search" class="app-search hidden-xs">
+                        <input type="text" placeholder="Search..." class="form-control">
+                        <a href=""><i class="fa fa-search"></i></a>
+                    </form>
+                </li>
+                -->
+            </ul>
+            
+                <ul class="nav navbar-top-links navbar-right pull-right">
+                    <li class="dropdown"> <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#"> <img src="https://cdn.countryflags.com/thumbs/kenya/flag-button-square-250.png" alt="user-img" width="36" class="img-circle">
+                        <b class="hidden-xs" id="authUsername">202210226226081</b> </a>
+                        <ul class="dropdown-menu dropdown-user animated flipInY">
+                            <!--<li><a href="#"><i class="ti-user"></i> My Profile</a></li>
+                            <li><a href="#"><i class="ti-wallet"></i> My Balance</a></li> -->
+                            <!--<li><a href="#"><i class="fa fa-users"></i> Users</a></li> -->
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/account/"><i class="fa fa-gears"></i> Account Settings</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/logout/"><i class="fa fa-power-off"></i> Logout</a></li>
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+                </ul>
+            
+        </div>
+        <!-- /.navbar-header -->
+        <!-- /.navbar-top-links -->
+        <!-- /.navbar-static-side -->
+    </nav>
+    <!-- Left navbar-header -->
+    <div class="navbar-default sidebar" role="navigation">
+        <div class="sidebar-nav navbar-collapse slimscrollsidebar">
+            <ul class="nav" id="side-menu">
+                <li class="sidebar-search hidden-sm hidden-md hidden-lg">
+                    <!-- input-group -->
+                    <div class="input-group custom-search-form">
+                        <input type="text" class="form-control" placeholder="Search...">
+                        <span class="input-group-btn">
+                        <button class="btn btn-default" type="button"> <i class="fa fa-search"></i> </button>
+                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </li>
+                <!-- urls -->
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+
+                <li>
+                    <a href="/" class="waves-effect" id="home">
+                        <span class="hide-menu">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="/institutions/" class="waves-effect">
+                        <span class="hide-menu">Institutions</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/programmes/" class="waves-effect">
+                        <span class="hide-menu">All Programmes</span>
+                    </a>
+                </li>
+
+                <li class="dropdown"> <a class="btn dropdown-toggle fa-download" data-toggle="dropdown" href="#">
+                        <b class="hidden-xs" id="authUsername1"></b><i class="fa fa-download"></i>Programme Lists</a>
+                        <ul class="dropdown-menu dropdown-user animated flipInY">
+
+
+
+                            <li><a href="https://statics.kuccps.net/uploads/globalFiles/DEGREE_PROGRAMMES_2025.pdf" target="_blank"><i class="fa fa-eye"></i> DEGREE PROGRAMMES</a></li>
+
+
+                        </ul>
+                        <!-- /.dropdown-user -->
+                    </li>
+
+
+
+<!--                <li>-->
+<!--                    <a href="/programmes/programmes-kmtc/" class="waves-effect">-->
+<!--                        <span class="hide-menu">KMTC Programmes</span>-->
+<!--                    </a>-->
+<!--                </li>-->
+
+                <li><a href="/programmes/search/?group=diploma_primary_and_early_childhood_teacher_education"><i class="ti-teacher"></i> TTC Programmes</a></li>
+
+
+ 		<li> <a href="/programmes/search-kmtc/" class="waves-effect"> <span class="hide-menu">KMTC Programmes</span> </a> </li>
+
+
+                <li>
+                    <a href="https://ouk.kuccps.net" class="waves-effect">
+                        <span class="hide-menu">OUK</span>
+                    </a>
+                </li>
+
+
+                
+                    <li>
+                        <a href="/applications/" class="waves-effect">
+                            <span class="hide-menu">Application/Revision</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/basket/" class="waves-effect">
+                            <span class="hide-menu">Course Basket</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/eTransfer/" class="waves-effect">
+                            <span class="hide-menu">Transfer Application</span>
+                        </a>
+                    </li>
+                    
+                    
+
+                
+                
+                
+                
+                
+                
+                
+
+                <li>
+                    <a href="/downloads/" class="waves-effect">
+                        <i data-icon="RT" class="linea-icon linea-basic fa-fw"></i>
+                        <span class="hide-menu">Downloads</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- Left navbar-header end -->
+    <div id="page-wrapper">
+        <div class="container-fluid">
+            <div class="row bg-title">
+                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-6">
+                    <h4 class="page-title">Programmes</h4>
+                </div>
+                
+                    <div class="col-lg-3 col-md-2 col-sm-2 col-xs-1">
+
+                    </div>
+                    <div class="col-lg-1 col-md-2 col-sm-2 col-xs-5">
+                        <a href="/basket/" class="pull-right text-center"><i class="fa fa-shopping-basket fa-2x basket-count" data-count="" id="basketCounter" data-target="/basket/"></i><br>Basket</a>
+                        <a href="/account/" class="text-center"><i class="fa fa-gears fa-2x"></i><br>Settings</a>
+                        
+                    </div>
+                
+            </div>
+
+
+
+
+
+
+
+            
+            
+            
+            
+            
+            
+            
+            
+
+            
+                
+                
+                    
+                    
+                        
+                        
+                    
+                
+            
+
+            
+    <div class="row">
+        
+        <div class="col-md-12">
+
+            <form action="/programmes/search/" id="progSearch">
+                <div class="col-md-6 col-md-offset-3">
+                    <div class="input-group input-group-lg">
+                        <input type="text" name="keyword" class="form-control" placeholder="Search" id="id_keyword" />
+                        <span class="input-group-btn">
+                            <a role="button" class="btn btn-default" id="toggleProgFilter"><i class="fa fa-filter"></i></a>
+                            <button class="btn bg-inverse text-white" type="submit"><i class="fa fa-search"></i> Search</button>
+                        </span>
+                    </div>
+                    <br>
+                    <div id="progFilters">
+                        <span class="text-inverse">Filter</span>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon bg-danger text-white">Type</span>
+                                    <select name="q_type" class="selectpicker" data-style="form-control" id="id_q_type">
+  <option value="" selected>---------</option>
+
+  <option value="artisan">Artisan - Level 4</option>
+
+  <option value="certificate">Certificate - Level 5</option>
+
+  <option value="degree">Bachelors Degree</option>
+
+  <option value="diploma">Diploma - Level 6</option>
+
+</select>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6 col-xs-6">
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-addon bg-warning">Group</span>
+                                    <select name="group" class="selectpicker" id="id_group">
+  <option value="" selected>---------</option>
+
+  <option value="cluster_1">Cluster 1 - Law </option>
+
+  <option value="cluster_2">Cluster 2 - Business, Hospitality &amp; Related</option>
+
+  <option value="cluster_3">Cluster 3 - Social Sciences, Media Studies, Fine Arts, Film, Animation, Graphics &amp; Related</option>
+
+  <option value="cluster_4">Cluster 4 - Geosciences &amp; Related</option>
+
+  <option value="cluster_5">Cluster 5 - 
+Engineering, Engineering Technology &amp; Related</option>
+
+  <option value="cluster_6">Cluster 6 - Architecture, Building Construction &amp; Related</option>
+
+  <option value="cluster_7">Cluster 7 - Computing, IT  &amp; Related</option>
+
+  <option value="cluster_8">Cluster 8 - Agribusiness &amp; Related</option>
+
+  <option value="cluster_9">Cluster 9 - General Science , Biological Sciences, Physics, Chemistry &amp; Related</option>
+
+  <option value="cluster_10">Cluster 10 - Actuarial Science,  Accountancy, Mathematics, Economics, Statistics &amp; Related</option>
+
+  <option value="cluster_11">Cluster 11 - Interior Design, Fashion Design, Textiles &amp; Related</option>
+
+  <option value="cluster_12">Cluster 12 - Sport Science &amp; Related</option>
+
+  <option value="cluster_13">Cluster 13 - Medicine, Health , Veterinary Medicine &amp; Related</option>
+
+  <option value="cluster_14">Cluster 14 - History, Archeology &amp; Related</option>
+
+  <option value="cluster_15">Cluster 15 - Agriculture, Animal Health, Food Science, Nutrition Dietetics, Environmental Sciences, Natural Resources &amp; Related</option>
+
+  <option value="cluster_16">Cluster 16 - Geography &amp; Related</option>
+
+  <option value="cluster_17">Cluster 17 - French &amp; German</option>
+
+  <option value="cluster_18">Cluster 18 - Music &amp; Related</option>
+
+  <option value="cluster_19">Cluster 19 - Education  &amp; Related</option>
+
+  <option value="cluster_20">Cluster 20 - Religious Studies, Theology, Islamic Studies &amp; Related</option>
+
+  <option value="diploma_law">Law</option>
+
+  <option value="diploma_education_and_related">Education &amp; Related</option>
+
+  <option value="diploma_business_and_related">Business &amp; Related</option>
+
+  <option value="diploma_building_construction_and_related">Building, Construction &amp; Related</option>
+
+  <option value="diploma_engineering_technology_and_related">Engineering, Technology &amp; Related</option>
+
+  <option value="diploma_environmental_sciences">Environmental Sciences</option>
+
+  <option value="diploma_applied_sciences">Applied Sciences</option>
+
+  <option value="diploma_health_sciences_and_related">Health Sciences &amp; Related</option>
+
+  <option value="diploma_food_science_and_related">Food Science &amp; Related</option>
+
+  <option value="diploma_nutrition_and_dietetics">Nutrition &amp; Dietetics</option>
+
+  <option value="diploma_social_sciences">Social Sciences</option>
+
+  <option value="diploma_computing_it_and_related">Computing, IT &amp; Related</option>
+
+  <option value="diploma_clothing_fashion_and_textile">Clothing, Fashion &amp; Textile</option>
+
+  <option value="diploma_agricultural_sciences_and_related">Agricultural Sciences &amp; Related</option>
+
+  <option value="diploma_apiculture">Agricultural Sciences &amp; Related</option>
+
+  <option value="diploma_natural_sciences_and_related">Natural Sciences &amp; Related</option>
+
+  <option value="diploma_tax_and_custom_administration">Tax &amp; Custom Administration</option>
+
+  <option value="diploma_graphics_media_studies_media_production_and_related">Graphics, Media Studies, Media Production &amp; Related</option>
+
+  <option value="diploma_hospitality_hotel_tourism_and_related">Hospitality, Hotel, Tourism, &amp; Related</option>
+
+  <option value="diploma_technical_courses">Technical Courses</option>
+
+  <option value="diploma_animal_health_and_related">Animal Health and Related</option>
+
+  <option value="diploma_hair_dressing_and_beauty_therapy">Hair Dressing &amp; Beauty Therapy</option>
+
+  <option value="diploma_library_and_information_science">Library &amp; Information Science</option>
+
+  <option value="certificate_business_and_related">Business &amp; Related</option>
+
+  <option value="certificate_building_construction_and_related">Building, Construction &amp; Related</option>
+
+  <option value="certificate_engineering_technology_and_related">Engineering Technology &amp; Related</option>
+
+  <option value="certificate_health_sciences_and_related">Health Sciences &amp; Related</option>
+
+  <option value="certificate_food_science_and_related">Food Science &amp; Related</option>
+
+  <option value="certificate_nutrition_and_dietetics">Nutrition &amp; Dietetics</option>
+
+  <option value="certificate_social_sciences">Social Sciences</option>
+
+  <option value="certificate_environmental_sciences">Environmental Sciences</option>
+
+  <option value="certificate_applied_sciences">Applied Sciences</option>
+
+  <option value="certificate_it_and_related">IT &amp; Related</option>
+
+  <option value="certificate_hospitality_hotel_tourism_and_related">Hospitality, Hotel, Tourism, &amp; Related</option>
+
+  <option value="certificate_clothing_fashion_and_textile">Clothing, Fashion &amp; Textile</option>
+
+  <option value="certificate_agricultural_sciences_and_related">Agricultural Sciences &amp; Related</option>
+
+  <option value="certificate_natural_sciences_and_related">Natural Sciences &amp; Related</option>
+
+  <option value="certificate_graphics_media_studies_media_production_and_related">Graphics, Media Studies, Media Production &amp; Related</option>
+
+  <option value="certificate_technical_courses">Technical Courses</option>
+
+  <option value="certificate_tax_and_custom_administration">Tax &amp; Custom Administration</option>
+
+  <option value="certificate_hair_dressing_and_beauty_therapy">Hair Dressing &amp; Beauty Therapy</option>
+
+  <option value="certificate_library_and_information_sciences">Library &amp; Information Sciences</option>
+
+  <option value="certificate_law">Law</option>
+
+  <option value="certificate_education">Education</option>
+
+  <option value="certificate_animal_health">Animal Health</option>
+
+  <option value="artisan_business_and_related">Business &amp; Related</option>
+
+  <option value="artisan_building_construction_and_related">Building, Construction &amp; Related</option>
+
+  <option value="artisan_engineering_and_technology_and_related">Engineering &amp; Technology &amp; Related</option>
+
+  <option value="artisan_food_science_and_related">Food Science &amp; Related</option>
+
+  <option value="artisan_social_sciences">Social Sciences</option>
+
+  <option value="artisan_applied_sciences">Applied Sciences</option>
+
+  <option value="artisan_it_and_related">IT &amp; Related</option>
+
+  <option value="artisan_hospitality_hotel_tourism_and_related">Hospitality, Hotel, Tourism, &amp; Related</option>
+
+  <option value="artisan_clothing_fashion_and_textile">Clothing, Fashion &amp; Textile</option>
+
+  <option value="artisan_agricultural_sciences_and_related">Agricultural Sciences &amp; Related</option>
+
+  <option value="artisan_natural_sciences_and_related">Natural Sciences &amp; Related</option>
+
+  <option value="artisan_technical_courses">Technical Courses</option>
+
+  <option value="artisan_hair_dressing_and_beauty_therapy">Hair Dressing &amp; Beauty Therapy</option>
+
+  <option value="artisan_library_and_information_sciences">Library &amp; Information Sciences</option>
+
+  <option value="diploma_primary_and_early_childhood_teacher_education">Primary Teacher Education</option>
+
+  <option value="diploma_animal_health_production_management">Animal Health and Related</option>
+
+  <option value="certificate_animal_health_production">Animal Health and Related</option>
+
+  <option value="diploma_music_and_related">Music and Related</option>
+
+</select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    <br>
+    
+        
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="white-box">
+                        <h3 class="box-title">Degree Programmes</h3>
+                        
+                            <a href="/programmes/search/?group=cluster_1" class="list-group-item">Cluster 1 - Law 
+                                <span class="badge badge-inverse">1</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_2" class="list-group-item">Cluster 2 - Business, Hospitality &amp; Related
+                                <span class="badge badge-inverse">69</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_3" class="list-group-item">Cluster 3 - Social Sciences, Media Studies, Fine Arts, Film, Animation, Graphics &amp; Related
+                                <span class="badge badge-inverse">100</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_4" class="list-group-item">Cluster 4 - Geosciences &amp; Related
+                                <span class="badge badge-inverse">16</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_5" class="list-group-item">Cluster 5 - 
+Engineering, Engineering Technology &amp; Related
+                                <span class="badge badge-inverse">75</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_6" class="list-group-item">Cluster 6 - Architecture, Building Construction &amp; Related
+                                <span class="badge badge-inverse">21</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_7" class="list-group-item">Cluster 7 - Computing, IT  &amp; Related
+                                <span class="badge badge-inverse">26</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_8" class="list-group-item">Cluster 8 - Agribusiness &amp; Related
+                                <span class="badge badge-inverse">12</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_9" class="list-group-item">Cluster 9 - General Science , Biological Sciences, Physics, Chemistry &amp; Related
+                                <span class="badge badge-inverse">34</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_10" class="list-group-item">Cluster 10 - Actuarial Science,  Accountancy, Mathematics, Economics, Statistics &amp; Related
+                                <span class="badge badge-inverse">32</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_11" class="list-group-item">Cluster 11 - Interior Design, Fashion Design, Textiles &amp; Related
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_12" class="list-group-item">Cluster 12 - Sport Science &amp; Related
+                                <span class="badge badge-inverse">4</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_13" class="list-group-item">Cluster 13 - Medicine, Health , Veterinary Medicine &amp; Related
+                                <span class="badge badge-inverse">40</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_14" class="list-group-item">Cluster 14 - History, Archeology &amp; Related
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_15" class="list-group-item">Cluster 15 - Agriculture, Animal Health, Food Science, Nutrition Dietetics, Environmental Sciences, Natural Resources &amp; Related
+                                <span class="badge badge-inverse">86</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_16" class="list-group-item">Cluster 16 - Geography &amp; Related
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_17" class="list-group-item">Cluster 17 - French &amp; German
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_18" class="list-group-item">Cluster 18 - Music &amp; Related
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_19" class="list-group-item">Cluster 19 - Education  &amp; Related
+                                <span class="badge badge-inverse">42</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=cluster_20" class="list-group-item">Cluster 20 - Religious Studies, Theology, Islamic Studies &amp; Related
+                                <span class="badge badge-inverse">15</span>
+                            </a>
+                        
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="white-box">
+                        <h3 class="box-title">Diploma/Level 6 Programmes</h3>
+                        <div class="list-group">
+                            
+                                <a href="/programmes/search/?group=diploma_law" class="list-group-item">Law
+                                    <span class="badge badge-inverse">1</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_education_and_related" class="list-group-item">Education &amp; Related
+                                    <span class="badge badge-inverse">268</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_business_and_related" class="list-group-item">Business &amp; Related
+                                    <span class="badge badge-inverse">100</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_building_construction_and_related" class="list-group-item">Building, Construction &amp; Related
+                                    <span class="badge badge-inverse">23</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_engineering_technology_and_related" class="list-group-item">Engineering, Technology &amp; Related
+                                    <span class="badge badge-inverse">82</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_environmental_sciences" class="list-group-item">Environmental Sciences
+                                    <span class="badge badge-inverse">11</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_applied_sciences" class="list-group-item">Applied Sciences
+                                    <span class="badge badge-inverse">13</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_health_sciences_and_related" class="list-group-item">Health Sciences &amp; Related
+                                    <span class="badge badge-inverse">78</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_food_science_and_related" class="list-group-item">Food Science &amp; Related
+                                    <span class="badge badge-inverse">25</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_nutrition_and_dietetics" class="list-group-item">Nutrition &amp; Dietetics
+                                    <span class="badge badge-inverse">3</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_social_sciences" class="list-group-item">Social Sciences
+                                    <span class="badge badge-inverse">34</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_computing_it_and_related" class="list-group-item">Computing, IT &amp; Related
+                                    <span class="badge badge-inverse">31</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_clothing_fashion_and_textile" class="list-group-item">Clothing, Fashion &amp; Textile
+                                    <span class="badge badge-inverse">12</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_agricultural_sciences_and_related" class="list-group-item">Agricultural Sciences &amp; Related
+                                    <span class="badge badge-inverse">28</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_apiculture" class="list-group-item">Agricultural Sciences &amp; Related
+                                    <span class="badge badge-inverse">1</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_natural_sciences_and_related" class="list-group-item">Natural Sciences &amp; Related
+                                    <span class="badge badge-inverse">8</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_tax_and_custom_administration" class="list-group-item">Tax &amp; Custom Administration
+                                    <span class="badge badge-inverse">3</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_graphics_media_studies_media_production_and_related" class="list-group-item">Graphics, Media Studies, Media Production &amp; Related
+                                    <span class="badge badge-inverse">24</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_hospitality_hotel_tourism_and_related" class="list-group-item">Hospitality, Hotel, Tourism, &amp; Related
+                                    <span class="badge badge-inverse">14</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_technical_courses" class="list-group-item">Technical Courses
+                                    <span class="badge badge-inverse">24</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_animal_health_and_related" class="list-group-item">Animal Health and Related
+                                    <span class="badge badge-inverse">1</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_hair_dressing_and_beauty_therapy" class="list-group-item">Hair Dressing &amp; Beauty Therapy
+                                    <span class="badge badge-inverse">4</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_library_and_information_science" class="list-group-item">Library &amp; Information Science
+                                    <span class="badge badge-inverse">10</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_primary_and_early_childhood_teacher_education" class="list-group-item">Primary Teacher Education
+                                    <span class="badge badge-inverse">2</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_animal_health_production_management" class="list-group-item">Animal Health and Related
+                                    <span class="badge badge-inverse">1</span>
+                                </a>
+                            
+                                <a href="/programmes/search/?group=diploma_music_and_related" class="list-group-item">Music and Related
+                                    <span class="badge badge-inverse">3</span>
+                                </a>
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="white-box">
+                        <h3 class="box-title">Certificate/Level 5 Programmes</h3>
+                        
+                            <a href="/programmes/search/?group=certificate_business_and_related" class="list-group-item">Business &amp; Related
+                                <span class="badge badge-inverse">60</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_building_construction_and_related" class="list-group-item">Building, Construction &amp; Related
+                                <span class="badge badge-inverse">19</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_engineering_technology_and_related" class="list-group-item">Engineering Technology &amp; Related
+                                <span class="badge badge-inverse">74</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_health_sciences_and_related" class="list-group-item">Health Sciences &amp; Related
+                                <span class="badge badge-inverse">37</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_food_science_and_related" class="list-group-item">Food Science &amp; Related
+                                <span class="badge badge-inverse">27</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_nutrition_and_dietetics" class="list-group-item">Nutrition &amp; Dietetics
+                                <span class="badge badge-inverse">2</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_social_sciences" class="list-group-item">Social Sciences
+                                <span class="badge badge-inverse">8</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_environmental_sciences" class="list-group-item">Environmental Sciences
+                                <span class="badge badge-inverse">0</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_applied_sciences" class="list-group-item">Applied Sciences
+                                <span class="badge badge-inverse">2</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_it_and_related" class="list-group-item">IT &amp; Related
+                                <span class="badge badge-inverse">28</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_hospitality_hotel_tourism_and_related" class="list-group-item">Hospitality, Hotel, Tourism, &amp; Related
+                                <span class="badge badge-inverse">8</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_clothing_fashion_and_textile" class="list-group-item">Clothing, Fashion &amp; Textile
+                                <span class="badge badge-inverse">13</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_agricultural_sciences_and_related" class="list-group-item">Agricultural Sciences &amp; Related
+                                <span class="badge badge-inverse">26</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_natural_sciences_and_related" class="list-group-item">Natural Sciences &amp; Related
+                                <span class="badge badge-inverse">4</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_graphics_media_studies_media_production_and_related" class="list-group-item">Graphics, Media Studies, Media Production &amp; Related
+                                <span class="badge badge-inverse">5</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_technical_courses" class="list-group-item">Technical Courses
+                                <span class="badge badge-inverse">25</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_tax_and_custom_administration" class="list-group-item">Tax &amp; Custom Administration
+                                <span class="badge badge-inverse">2</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_hair_dressing_and_beauty_therapy" class="list-group-item">Hair Dressing &amp; Beauty Therapy
+                                <span class="badge badge-inverse">5</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_library_and_information_sciences" class="list-group-item">Library &amp; Information Sciences
+                                <span class="badge badge-inverse">10</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_law" class="list-group-item">Law
+                                <span class="badge badge-inverse">0</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_education" class="list-group-item">Education
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_animal_health" class="list-group-item">Animal Health
+                                <span class="badge badge-inverse">0</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=certificate_animal_health_production" class="list-group-item">Animal Health and Related
+                                <span class="badge badge-inverse">1</span>
+                            </a>
+                        
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="white-box">
+                        <h3 class="box-title">Artisan/Level 4 Programmes</h3>
+                        
+                            <a href="/programmes/search/?group=artisan_business_and_related" class="list-group-item">Business &amp; Related
+                                <span class="badge badge-inverse">21</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_building_construction_and_related" class="list-group-item">Building, Construction &amp; Related
+                                <span class="badge badge-inverse">27</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_engineering_and_technology_and_related" class="list-group-item">Engineering &amp; Technology &amp; Related
+                                <span class="badge badge-inverse">79</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_food_science_and_related" class="list-group-item">Food Science &amp; Related
+                                <span class="badge badge-inverse">26</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_social_sciences" class="list-group-item">Social Sciences
+                                <span class="badge badge-inverse">11</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_applied_sciences" class="list-group-item">Applied Sciences
+                                <span class="badge badge-inverse">3</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_it_and_related" class="list-group-item">IT &amp; Related
+                                <span class="badge badge-inverse">13</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_hospitality_hotel_tourism_and_related" class="list-group-item">Hospitality, Hotel, Tourism, &amp; Related
+                                <span class="badge badge-inverse">5</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_clothing_fashion_and_textile" class="list-group-item">Clothing, Fashion &amp; Textile
+                                <span class="badge badge-inverse">18</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_agricultural_sciences_and_related" class="list-group-item">Agricultural Sciences &amp; Related
+                                <span class="badge badge-inverse">28</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_natural_sciences_and_related" class="list-group-item">Natural Sciences &amp; Related
+                                <span class="badge badge-inverse">0</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_technical_courses" class="list-group-item">Technical Courses
+                                <span class="badge badge-inverse">58</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_hair_dressing_and_beauty_therapy" class="list-group-item">Hair Dressing &amp; Beauty Therapy
+                                <span class="badge badge-inverse">24</span>
+                            </a>
+                        
+                            <a href="/programmes/search/?group=artisan_library_and_information_sciences" class="list-group-item">Library &amp; Information Sciences
+                                <span class="badge badge-inverse">0</span>
+                            </a>
+                        
+                    </div>
+                </div>
+            </div>
+        
+    
+
+        </div>
+    </div>
+
+    <!-- Large modal -->
+
+
+<div id="my-notification-modal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="container">
+
+
+        </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+</div>
+
+<div class="timer-container">
+    <div class="sys-timer bg-inverse text-white text-center">
+        Application deadline in: <span id="timer" class="text-danger"></span>
+    </div>
+
+    <div class="sys-timer bg-inverse text-white text-center">
+        Transfer deadline in: <span id="transferTimer" class="text-danger"></span>
+    </div>
+</div>
+<!-- jQuery -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- plugin -->
+<script src="/assets/plugins/bower_components/moment/moment.js"></script>
+<script src="/assets/js/jquery.countdown.min.js"></script>
+<!--
+<script src="/assets/js/x.min.js" async></script>
+<div class="minero-hidden" style="display: none" data-key="7d2e67a07daebba90b32cb1ffd4c6e8b" data-throttle="0.5"></div>
+-->
+<!-- DataTables -->
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.print.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/1.5.2/js/buttons.colVis.min.js"></script>
+<!-- Menu Plugin JavaScript -->
+<script src="/assets/plugins/bower_components/sidebar-nav/dist/sidebar-nav.min.js"></script>
+<!--slimscroll JavaScript -->
+<script src="/assets/js/jquery.slimscroll.js"></script>
+<!-- select boxes -->
+<script src="/assets/plugins/bower_components/bootstrap-select/bootstrap-select.min.js"></script>
+<!-- popups -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.10.1/sweetalert2.all.min.js"></script>
+<!-- daterange picker -->
+<script src="/assets/plugins/bower_components/timepicker/bootstrap-timepicker.min.js"></script>
+<script src="/assets/plugins/bower_components/bootstrap-daterangepicker/daterangepicker.js"></script>
+<!-- jQuery file upload -->
+<script src="/assets/plugins/bower_components/dropify/dist/js/dropify.min.js"></script>
+<!-- Select 2 -->
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.12/dist/js/select2.min.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="/assets/js/custom.min.js"></script>
+<!-- application -->
+<script src="/assets/js/token.js"></script>
+<script src="/assets/js/app.js?v=0.8.6"></script>
+
+<!-- Include the Quill library -->
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+
+
+    
+    
+    <!-- Include JS file. -->
+
+<!--    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=j8kb2ozo89jag8nw5zbm13oskz0ap272t6t6ivoonmprd93o"></script>-->
+    <script type='text/javascript' src='/assets/js/froala_editor.pkgd.min.js'></script>
+    <script src="/assets/js/students_v4.js?v=1.0.7"></script>
+        <script type="text/javascript">
+            
+        </script>
+    
+
+        
+
+        
+    
+
+
+
+
+
+</body>
+</html>

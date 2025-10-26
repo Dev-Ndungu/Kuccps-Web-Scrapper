@@ -1,0 +1,119 @@
+/* 
+ * KUCCPS Auto-Saver Bookmarklet
+ * 
+ * SETUP:
+ * 1. Create a new bookmark in Chrome
+ * 2. Name it: "KUCCPS Saver"
+ * 3. Copy the code from bookmarklet_code.txt and paste as the URL
+ * 4. Go to a course page and click the bookmarklet - it saves the data!
+ */
+
+javascript:(function(){
+    // Initialize storage
+    if (!window.kuccpsData) {
+        window.kuccpsData = [];
+        console.log('KUCCPS Saver initialized!');
+    }
+    
+    // Extract course data from current page
+    function extractData() {
+        const data = {};
+        
+        // Course title
+        const titleEl = document.querySelector('h3.text-center');
+        data.title = titleEl ? titleEl.innerText.trim() : '';
+        
+        // Cluster
+        const clusterEl = document.querySelector('.btn-danger');
+        data.cluster = clusterEl ? clusterEl.innerText.trim() : '';
+        
+        // Entry requirements
+        data.entryReqs = [];
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            const cells = row.querySelectorAll('th, td');
+            if (cells.length >= 2) {
+                const header = cells[0].innerText.trim();
+                if (header.toLowerCase().includes('cluster subject')) {
+                    data.entryReqs.push({
+                        req: header,
+                        val: cells[1].innerText.trim()
+                    });
+                }
+            }
+        });
+        
+        // Subject requirements  
+        data.subjectReqs = [];
+        document.querySelectorAll('table tbody tr').forEach(row => {
+            const cells = row.querySelectorAll('th, td');
+            if (cells.length >= 2) {
+                const header = cells[0].innerText.trim();
+                if (header.toLowerCase().includes('subject') && !header.toLowerCase().includes('cluster') && !row.innerText.includes('NOTE')) {
+                    data.subjectReqs.push({
+                        req: header,
+                        val: cells[1].innerText.trim(),
+                        grade: cells.length > 2 ? cells[2].innerText.trim() : ''
+                    });
+                }
+            }
+        });
+        
+        // Programmes
+        data.programmes = [];
+        document.querySelectorAll('.table-responsive table tbody tr').forEach(row => {
+            const cells = row.querySelectorAll('td, th');
+            if (cells.length >= 8) {
+                const instText = cells[0].innerText.trim();
+                const lines = instText.split('\\n').map(l => l.trim()).filter(l => l);
+                
+                data.programmes.push({
+                    inst: lines[0] || '',
+                    county: lines[1] || '',
+                    type: cells[1].innerText.trim(),
+                    code: cells[2].innerText.trim(),
+                    name: cells[3].innerText.trim(),
+                    cut2025: cells[4].innerText.trim(),
+                    cut2024: cells[5].innerText.trim(),
+                    cut2023: cells[6].innerText.trim(),
+                    weight: cells[7].innerText.trim()
+                });
+            }
+        });
+        
+        data.url = window.location.href;
+        data.timestamp = new Date().toISOString();
+        
+        return data;
+    }
+    
+    // Save current page
+    const courseData = extractData();
+    if (courseData.title) {
+        window.kuccpsData.push(courseData);
+        
+        // Show notification
+        const notification = document.createElement('div');
+        notification.style.cssText = 'position:fixed;top:20px;right:20px;background:#4CAF50;color:white;padding:15px 25px;border-radius:5px;z-index:99999;font-family:Arial;box-shadow:0 4px 6px rgba(0,0,0,0.2);';
+        notification.innerHTML = `✓ Saved: ${courseData.title}<br>Total: ${window.kuccpsData.length} courses`;
+        document.body.appendChild(notification);
+        setTimeout(() => notification.remove(), 3000);
+        
+        console.log('Saved course:', courseData.title);
+        console.log('Total courses saved:', window.kuccpsData.length);
+        console.log('To download, run: downloadKUCCPSData()');
+    } else {
+        alert('No course data found on this page!');
+    }
+    
+    // Download function
+    window.downloadKUCCPSData = function() {
+        const json = JSON.stringify(window.kuccpsData, null, 2);
+        const blob = new Blob([json], {type: 'application/json'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'kuccps_courses_' + new Date().getTime() + '.json';
+        a.click();
+        alert('Downloaded ' + window.kuccpsData.length + ' courses!');
+    };
+})();

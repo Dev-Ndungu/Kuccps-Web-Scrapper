@@ -1,0 +1,23 @@
+KUCCPS Scraper - Manual Instructions
+
+Since your network firewall is blocking automated access, here's how to scrape manually:
+
+OPTION 1: Use Chrome DevTools Console
+-------------------------------------
+1. In your Chrome browser, navigate to: https://students.kuccps.net/programmes/search/?group=cluster_1
+2. Press F12 to open DevTools
+3. Go to the Console tab
+4. Copy and paste the JavaScript code from `manual_scraper.js` (I'll create this file)
+5. Press Enter to run it
+6. The script will automatically click through all courses and save the data
+7. When done, copy the JSON output and save to data/kuccps_courses.json
+
+OPTION 2: Start Chrome with Remote Debugging
+--------------------------------------------
+1. Close ALL Chrome windows
+2. Open PowerShell and run:
+   & "C:\Program Files\Google\Chrome\Application\chrome.exe" --remote-debugging-port=9222 --user-data-dir="chrome_profile_for_scraper"
+3. Log in to students.kuccps.net in the opened Chrome window
+4. Run: python scrape_with_browser.py
+
+This will connect to your logged-in Chrome session and scrape the data.

@@ -1,0 +1,262 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                      KUCCPS DATA COLLECTION                                ║
+║                     START HERE - SIMPLE GUIDE                              ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+Since automated scraping is blocked by your network, I've created 3 
+working methods that use YOUR BROWSER (which can access the data):
+
+═══════════════════════════════════════════════════════════════════════════
+
+🏆 RECOMMENDED: METHOD 1 - ONE-CLICK BOOKMARKLET (FASTEST!)
+
+⏱️ Time: ~30 seconds per page
+📄 Instructions: Open BOOKMARKLET_METHOD.txt
+
+Quick steps:
+1. Create a bookmark with special JavaScript code (1-minute setup)
+2. Click the bookmark on each course page
+3. JSON file downloads automatically when done
+
+This is BY FAR the fastest method!
+
+═══════════════════════════════════════════════════════════════════════════
+
+📋 ALTERNATIVE: METHOD 2 - BROWSER CONSOLE SCRIPT
+
+⏱️ Time: ~1 minute per page
+📄 Instructions: Open BROWSER_CONSOLE_METHOD.txt
+
+Quick steps:
+1. Press F12 to open Console
+2. Copy/paste extraction script
+3. Visit course pages (data auto-saves)
+4. Run export command to download JSON
+
+Good if you want more control over the process.
+
+═══════════════════════════════════════════════════════════════════════════
+
+💾 ALTERNATIVE: METHOD 3 - SAVE HTML FILES
+
+⏱️ Time: ~2 minutes per page
+📄 Instructions: Open MANUAL_COLLECTION_GUIDE.md
+
+Quick steps:
+1. Right-click → Save As → HTML Only
+2. Save to saved_pages/ folder
+3. Run: python parse_saved_html.py
+4. Get both JSON and CSV files
+
+Good if you want offline processing and CSV output.
+
+═══════════════════════════════════════════════════════════════════════════
+
+📖 FULL COMPARISON: Open README_METHODS.md
+
+═══════════════════════════════════════════════════════════════════════════
+
+🚀 QUICK START (Do this now!):
+
+1. Open: BOOKMARKLET_METHOD.txt
+   
+2. Copy the bookmarklet code (the long javascript: line)
+
+3. Create a new bookmark in your browser:
+   - Press Ctrl+D or use Bookmark Manager
+   - Name: "Extract KUCCPS Course"
+   - URL: [Paste the bookmarklet code]
+   - Save
+
+4. Navigate to a KUCCPS course page
+
+5. Click your new bookmark
+
+6. You'll see: "✓ Saved! Total: 1 courses..."
+   - Click "Cancel" to continue
+
+7. Go to next course page, click bookmark again
+
+8. Repeat for all courses
+
+9. On the LAST page, click bookmark → Click "OK" to download
+
+10. Move the downloaded JSON file to the data/ folder
+
+11. DONE! You have all your course data!
+
+═══════════════════════════════════════════════════════════════════════════
+
+❓ WHICH FILE TO OPEN?
+
+Your situation                          →  Open this file
+─────────────────────────────────────────────────────────────────────────
+Want fastest method (1 click/page)      →  BOOKMARKLET_METHOD.txt
+Comfortable with DevTools               →  BROWSER_CONSOLE_METHOD.txt  
+Want to save HTML files first           →  MANUAL_COLLECTION_GUIDE.md
+Want to compare all methods             →  README_METHODS.md
+Want step-by-step (you are here!)       →  Keep reading below ↓
+
+═══════════════════════════════════════════════════════════════════════════
+
+📂 YOUR FILES:
+
+BOOKMARKLET_METHOD.txt           ← Method 1 (Fastest!)
+BROWSER_CONSOLE_METHOD.txt       ← Method 2 (More control)
+MANUAL_COLLECTION_GUIDE.md       ← Method 3 (Offline processing)
+README_METHODS.md                ← Full comparison
+START_HERE.txt                   ← This file
+
+saved_pages/                     ← Folder for HTML files (Method 3)
+data/                            ← Output folder
+  ├── kuccps_courses.json        ← Your data goes here
+  └── kuccps_courses.csv         ← CSV format (Method 3 only)
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎯 MY RECOMMENDATION:
+
+Use the BOOKMARKLET method. Here's why:
+
+✅ Takes only 30 seconds per page (just one click!)
+✅ No copy/pasting needed
+✅ Shows instant feedback
+✅ Auto-downloads JSON when done
+✅ Works in any browser
+✅ Easiest to use
+
+The other methods work too, but bookmarklet is the fastest.
+
+═══════════════════════════════════════════════════════════════════════════
+
+💡 HOW IT WORKS:
+
+All three methods bypass the network firewall by:
+
+1. YOU navigate using your logged-in browser
+2. JavaScript extracts data from the page you're viewing
+3. Data is saved locally in your browser
+4. You download the collected data as JSON
+
+Since we're using YOUR browser (not automation tools), the network
+firewall doesn't block it. Your browser already has access!
+
+═══════════════════════════════════════════════════════════════════════════
+
+📊 WHAT DATA GETS COLLECTED:
+
+For each course page, we extract:
+
+✓ Course title
+✓ Entry requirements (all cluster subjects and grades)
+✓ Subject requirements (all subjects and minimum grades)
+✓ Available programmes:
+  - Institution name
+  - County
+  - Programme type
+  - Programme code
+  - Programme name
+  - KCSE 2025 cutoff points
+  - KCSE 2024 cutoff points
+  - KCSE 2023 cutoff points
+  - Cluster weights
+
+All data is extracted automatically from the tables on each page.
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎬 COMPLETE WORKFLOW:
+
+┌─────────────────────────────────────────────────────────────────┐
+│ 1. Create bookmarklet (1 minute)                                │
+│    → Open BOOKMARKLET_METHOD.txt                                │
+│    → Copy the javascript code                                   │
+│    → Create bookmark with that code                             │
+├─────────────────────────────────────────────────────────────────┤
+│ 2. Log in to KUCCPS                                             │
+│    → https://students.kuccps.net/                               │
+├─────────────────────────────────────────────────────────────────┤
+│ 3. Visit first course page                                      │
+│    → Click on a course from cluster list                        │
+├─────────────────────────────────────────────────────────────────┤
+│ 4. Click your "Extract KUCCPS Course" bookmark                  │
+│    → Popup shows "✓ Saved! Total: 1 courses..."                │
+│    → Click "Cancel" to continue                                 │
+├─────────────────────────────────────────────────────────────────┤
+│ 5. Go to next course page                                       │
+│    → Click bookmark again                                       │
+│    → Click "Cancel" to continue                                 │
+├─────────────────────────────────────────────────────────────────┤
+│ 6. Repeat for all courses                                       │
+│    → Keep visiting pages and clicking bookmark                  │
+│    → Each popup shows total count increasing                    │
+├─────────────────────────────────────────────────────────────────┤
+│ 7. On the LAST course page                                      │
+│    → Click bookmark                                             │
+│    → Click "OK" when asked "Download now?"                      │
+│    → JSON file downloads automatically                          │
+├─────────────────────────────────────────────────────────────────┤
+│ 8. Move downloaded file                                         │
+│    → From: Downloads folder                                     │
+│    → To: C:\Users\kelvinnj\Desktop\kuccps-scraper\data\         │
+├─────────────────────────────────────────────────────────────────┤
+│ 9. DONE!                                                        │
+│    → You have all your course data in JSON format              │
+│    → Ready for analysis, import, or further processing         │
+└─────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT NOTES:
+
+• Don't clear browser data until you've downloaded the JSON file
+• Data is stored in browser's localStorage (persists across sessions)
+• You can close and reopen browser - data is saved
+• Each course is identified by URL - no duplicates
+• The popup counter shows how many courses you've collected
+• Click "OK" to download only when you're completely done
+
+═══════════════════════════════════════════════════════════════════════════
+
+🔧 IF SOMETHING GOES WRONG:
+
+Issue: Bookmark doesn't work
+Fix: Make sure you copied the ENTIRE bookmarklet code, including
+     "javascript:" at the beginning
+
+Issue: No popup appears
+Fix: Allow popups for the KUCCPS website in your browser settings
+
+Issue: Want to start over
+Fix: Open Console (F12) and run: localStorage.removeItem('kuccps_scraped_courses')
+
+Issue: Lost progress
+Fix: Don't worry! Data is saved in browser. Just click bookmark again
+     on any page to see your count, then continue
+
+═══════════════════════════════════════════════════════════════════════════
+
+🎉 YOU'RE READY!
+
+Open BOOKMARKLET_METHOD.txt now and get started!
+
+It will take you about:
+- 1 minute to set up the bookmark
+- 30 seconds per course page to collect data
+- 20 courses across all clusters = ~10-15 minutes total
+
+Much faster than manually typing everything!
+
+═══════════════════════════════════════════════════════════════════════════
+
+Questions? Check the detailed instructions in:
+→ BOOKMARKLET_METHOD.txt (for Method 1)
+→ BROWSER_CONSOLE_METHOD.txt (for Method 2)  
+→ MANUAL_COLLECTION_GUIDE.md (for Method 3)
+→ README_METHODS.md (for comparison)
+
+═══════════════════════════════════════════════════════════════════════════
+
+Good luck! You've got this! 🚀
+
+═══════════════════════════════════════════════════════════════════════════

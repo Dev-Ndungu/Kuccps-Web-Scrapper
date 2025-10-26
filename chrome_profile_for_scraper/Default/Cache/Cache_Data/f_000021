@@ -1,0 +1,1443 @@
+/*
+* STUDENTS FUNCTIONS
+*
+*
+*/
+$(document).ready(function (event) {
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    });
+
+    // toggle programmes search filters
+    $('#toggleProgFilter').click(function () {
+       let $filters = $('#progFilters');
+       // clear filters
+        $filters.find('select').each(function () {
+            $(this).val('').trigger('change');
+        });
+        $filters.toggleClass('hide')
+    });
+
+    let $studentID = $('#authUsername').html();
+    // We can attach the `fileselect` event to all file inputs on the page
+    $(document).on('change', ':file', function () {
+        let input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
+
+    // We can watch for our custom `fileselect` event like this
+    $(document).on('fileselect', ':file', function (event, numFiles, label) {
+
+        let input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+        if (input.length) {
+            input.val(log);
+        } else {
+            if (log) alert(log);
+        }
+
+    });
+
+    // listen on form changes
+    $(document).on('keyup change input', 'form.applicationForm', function (e) {
+        let $markup = '<div class="alert alert-danger text-uppercase help-block unsavedChanges alert-dismissable"><i class="fa fa-warning"></i> You have made changes to this form! Click on submit to save them.' +
+            '<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>';
+        $(this).children('.unsavedChanges').remove();
+        $(this).prepend($markup);
+    });
+
+
+
+    // prevent searching with empty values
+    $('#progSearch').submit(function (e) {
+        if ($('#id_keyword').val() === '' && $('#id_q_type').val() === '' && $('#id_group').val() === '') e.preventDefault();
+    });
+
+    let $h = $('#progDetails').height();
+    $('#instOffering').height($h);
+    $('#instOfferingContainer').slimScroll({
+        height: ($h - 22)
+    });
+
+    let $basketMinimums = $.find('.basketMinReq');
+    $.each($basketMinimums, function($id, $elem){
+        let $code = $($elem).data('key');
+        let $qualificationId = $($elem).data('role');
+        let $data = {
+            'qualification_id': $qualificationId,
+            'requirements_check': true,
+            'choice': $code
+        };
+        // confirm all requirements have been met
+        $.ajax({
+            url: $($elem).data('target'),
+            type: 'GET',
+            data: $data,
+            beforeSend: function () {
+                let $markup = "<small class='help-block text-uppercase m-b-0'>Checking requirements...</small>";
+                $($elem).append($markup);
+            }
+        }).done(function (response) {
+            // dataObj = JSON.parse(response);
+            dataObj = response;
+            $($elem).children('.help-block').remove();
+            let $message = dataObj[2];
+            if (dataObj[1]) {
+                let $markup = "<span class='text-success text-uppercase m-b-0'>" + $message + "</small>";
+                $($elem).append($markup);
+            } else {
+                let $markup = "<span class='text-danger text-uppercase m-b-0'>" + $message + "</small>";
+                $($elem).append($markup);
+            }
+        })
+    });
+    // update basket counter
+    function $updateBasketCount() {
+        let $icon = $('#basketCounter');
+        $.ajax({
+            url: $icon.data('target'),
+            type: 'GET',
+            data: {basket_count: true}
+        }).done((r)=>{
+            $icon.attr('data-count', r.basket_count);
+        });
+
+    }$updateBasketCount();
+
+    // add to basket
+    $(document).on('click', '.basketAdd', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('href'),
+            type: 'POST',
+            data: {basket_add: true, basket_item: $(this).data('key')}
+        }).done((r)=>{
+            $(this).removeClass('label-inverse basketAdd').addClass('label-success').removeAttr('href').html('ADDED');
+            $updateBasketCount();
+        });
+    });
+
+    // remove from basket
+    $(document).on('click', '.basketDelete', function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: $(this).attr('href'),
+            type: 'POST',
+            data: {basket_delete: true, basket_item: $(this).data('key')}
+        }).done((r)=>{$(this).parent('div.white-box').remove();$updateBasketCount();});
+    });
+
+
+
+    // let $OUKMinimums = $.find('.OUKMinReq');
+    // $.each($OUKMinimums, function($id, $elem){
+    //     let $code = $($elem).data('key');
+    //     let $qualificationId = $($elem).data('role');
+    //     let $data = {
+    //         'qualification_id': $qualificationId,
+    //         'requirements_check': true,
+    //         'choice': $code
+    //     };
+    //     // confirm all requirements have been met
+    //     $.ajax({
+    //         url: $($elem).data('target'),
+    //         type: 'GET',
+    //         data: $data,
+    //         beforeSend: function () {
+    //             let $markup = "<small class='help-block text-uppercase m-b-0'>Checking requirements...</small>";
+    //             $($elem).append($markup);
+    //         }
+    //     }).done(function (response) {
+    //         // dataObj = JSON.parse(response);
+    //         dataObj = response;
+    //         $($elem).children('.help-block').remove();
+    //         let $message = dataObj[2];
+    //         if (dataObj[1]) {
+    //             let $markup = "<span class='text-success text-uppercase m-b-0'>" + $message + "</small>";
+    //             $($elem).append($markup);
+    //         } else {
+    //             let $markup = "<span class='text-danger text-uppercase m-b-0'>" + $message + "</small>";
+    //             $($elem).append($markup);
+    //         }
+    //     })
+    // });
+    //
+    //
+    // // apply to OUK
+    // $(document).on('click', '.applyOUK', function (e) {
+    //     e.preventDefault();
+    //     let $url = $(this).attr('href');
+    //     let $text = $(this).data('key');
+    //     let $html = '<strong>Your are about to submit your Open University Application for '+ $text +'. This action cannot be reversed!' +
+    //         '<br><span class="text-success">Enter your password to proceed?</span></strong>';
+    //     swal({
+    //         type: "success",
+    //         titleText: 'Submit Application',
+    //         html: $html,
+    //         input: 'password',
+    //         inputPlaceholder: 'Enter your Password',
+    //         confirmButtonText: '<i class="fa fa-trash-o"></i> Yes!',
+    //         cancelButtonText: '<i class="fa fa-undo"></i> No',
+    //         showCancelButton: true,
+    //         buttonsStyling: true,
+    //         confirmButtonColor: 'green',
+    //         showLoaderOnConfirm: true,
+    //         inputValidator: (value)=> {
+    //             return new Promise((resolve, reject)=> {
+    //                 if (value) {
+    //                     // Confirm the password is correct and call the resolve
+    //                     $.ajax({
+    //                         url: $url,
+    //                         type: 'POST',
+    //                         data: {user_validator: true, password: value}
+    //                     }).done((r)=>{r.user ? resolve() : reject('This password is incorrect!')}).fail((e)=>{reject('Please check your internet connection!')})
+    //                 } else {
+    //                     reject('This can\'t be blank')
+    //                 }
+    //             })
+    //         }
+    //     }).then(() => {
+    //         let $data = {
+    //             submit_application: true,
+    //             programme_id: $(this).data('key')
+    //         };
+    //         $.ajax({
+    //             url: $url,
+    //             type: 'POST',
+    //             data: $data,
+    //             beforeSend: ()=>{swal({ text: 'Applying...', onOpen: ()=> {swal.showLoading()}})}
+    //         }).done(() =>{
+    //             swal({
+    //                 type: 'success',
+    //                 html: '<strong>Application Submitted</strong>'
+    //             });
+    //             window.location.reload();
+    //         }).fail(() =>{
+    //             swal({
+    //                 type: 'error',
+    //                 html: '<strong>This action failed!</strong>'
+    //             })
+    //         });
+    //     })
+    // });
+
+
+        let $OUKMinimums = $.find('.OUKMinReq');
+    $.each($OUKMinimums, function($id, $elem){
+        let $code = $($elem).data('key');
+        let $qualificationId = $($elem).data('role');
+        let $data = {
+            'qualification_id': $qualificationId,
+            'requirements_check': true,
+            'choice': $code
+        };
+        // confirm all requirements have been met
+        $.ajax({
+            url: $($elem).data('target'),
+            type: 'GET',
+            data: $data,
+            beforeSend: function () {
+                let $markup = "<small class='help-block text-uppercase m-b-0'>Checking requirements...</small>";
+                $($elem).append($markup);
+            }
+        }).done(function (response) {
+            // dataObj = JSON.parse(response);
+            dataObj = response;
+            $($elem).children('.help-block').remove();
+            let $message = dataObj[2];
+            if (dataObj[1]) {
+                let $markup = "<span class='text-success text-uppercase m-b-0'>" + $message + "</small>";
+                $($elem).append($markup);
+            } else {
+                let $markup = "<span class='text-danger text-uppercase m-b-0'>" + $message + "</small>";
+                $($elem).append($markup);
+            }
+        })
+    });
+
+
+    // apply to OUK
+    $(document).on('click', '.applyOUK', function (e) {
+        e.preventDefault();
+        let $url = $(this).attr('href');
+        let $text = $(this).data('key');
+        $.ajax({
+                url: $url, type: 'POST', data: {check_payment: true}, beforeSend: ()=>{swal({ text: 'Please wait for the next step...', onOpen: ()=> {swal.showLoading()}})}
+            }).done((response) => {
+                console.log(response);
+                let $data = JSON.parse(response);
+        let $payment = $data['paid'];
+        let $amountDue = $data['amount_due'];
+        // let $html = $amountDue<= 0 ? '<strong>You have already made the MPESA payment. Enter the Transaction Code below</strong>' :
+        //     '<strong>Please pay <span class="text-warning">' + $amountDue.toLocaleString() + '</span> to <span class="text-success">Paybill 820201</span>. Your Account Number is <span class="text-info">' + $studentID + '</span>. Enter the Transaction Code below';
+        // $html = $html + ' By submitting your application you agree to <a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a>';
+        //
+        let $html = $amountDue <= 0 ? '<strong>You have already made the Service payment. </br> Enter the Payment REF in the field provided. </strong> </br>' :
+            '<strong>Click <a target="_blank" href="/pesaflow/"> HERE </a> to Pay </span> <span class="text-warning"> Ksh ' + $amountDue.toLocaleString() + '</span>.</br>Enter the Payment REF in the field provided.';
+        $html = $html + '</br>By submitting your application you agree to <small><a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a></small> ';
+        swal({
+            title: 'Service Payment',
+            html: $html,
+            input: 'text',
+            inputPlaceholder: 'Enter eCitizen Account No or eCitizen Payment Ref',
+            inputClass: 'form-control',
+            confirmButtonText: 'Submit',
+            showCancelButton: true,
+            buttonsStyling: true,
+            confirmButtonColor: '#32CD32',
+            cancelButtonColor: '#d33',
+            showLoaderOnConfirm: true,
+            inputValidator: function (value) {
+                return new Promise(function (resolve, reject) {
+                    if (value) {
+                        resolve()
+                    } else {
+                        reject('This can\'t be blank')
+                    }
+                })
+            }
+        }).then(($mpesaCode) => {
+            // send the mpesa code
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: {transaction_code: $mpesaCode},
+                beforeSend: () => {
+                    swal({
+                        text: 'Checking Payment...', onOpen: () => {
+                            swal.showLoading()
+                        }
+                    })
+                }
+            }).done((response) => {
+                // close the loading message
+                swal.close();
+                // if the payment was found and amount not  paid in full
+                if (response['type'] === 'success' && response['amount_due'] > 0) {
+                    swal({
+                        title: response['type'],
+                        text: response['message'] + ' Amount Due: ' + response['amount_due'],
+                        type: response['type'],
+                        showCancelButton: true
+                    });
+                } else if (response['type'] === 'success' && response['amount_due'] <= 0) { // the payment was found and payment not paid in full
+                    // submit the choices
+                    let $html = '<strong>Your are about to submit your Open University Application for '+ $text +'. This action cannot be reversed!' +
+                        '<br><span class="text-success">Enter your password to proceed?</span></strong>';
+                    swal({
+                        type: "success",
+                        titleText: 'Submit Application',
+                        html: $html,
+                        input: 'password',
+                        inputPlaceholder: 'Enter your Password',
+                        confirmButtonText: '<i class="fa fa-trash-o"></i> Yes!',
+                        cancelButtonText: '<i class="fa fa-undo"></i> No',
+                        showCancelButton: true,
+                        buttonsStyling: true,
+                        confirmButtonColor: 'green',
+                        showLoaderOnConfirm: true,
+                        inputValidator: (value)=> {
+                            return new Promise((resolve, reject)=> {
+                                if (value) {
+                                    // Confirm the password is correct and call the resolve
+                                    $.ajax({
+                                        url: $url,
+                                        type: 'POST',
+                                        data: {user_validator: true, password: value}
+                                    }).done((r)=>{r.user ? resolve() : reject('This password is incorrect!')}).fail((e)=>{reject('Please check your internet connection!')})
+                                } else {
+                                    reject('This can\'t be blank')
+                                }
+                            })
+                        }
+                    }).then(() => {
+                        let $data = {
+                            submit_application: true,
+                            programme_id: $(this).data('key')
+                        };
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: $data,
+                            beforeSend: ()=>{swal({ text: 'Applying...', onOpen: ()=> {swal.showLoading()}})}
+                        }).done(() =>{
+                            swal({
+                                type: 'success',
+                                html: '<strong>Application Submitted</strong>'
+                            });
+                            window.location.reload();
+                        }).fail(() =>{
+                            swal({
+                                type: 'error',
+                                html: '<strong>This action failed!</strong>'
+                            })
+                        });
+                    })
+                } else { // the payment was not found
+                    swal({
+                        title: response['type'],
+                        text: response['message'],
+                        type: response['type'],
+                        showCancelButton: true
+                    });
+                }
+            }).fail(() => {
+                swal('Error!', 'Please check your internet connection', 'error')
+            })
+        })
+
+        });
+    });
+
+
+
+    function $allStorage() {
+        // returns all the values on localStorage as an array
+        let $values = [],
+            $keys = Object.keys(localStorage),
+            $i = $keys.length;
+        while ( $i-- ) {
+            $values.push( localStorage.getItem($keys[$i]) );
+        }
+        return $values;
+    }
+
+    //application
+    $(document).on('click', '.launchApplicationDelete', function (e) {
+        e.preventDefault();
+        let $url = $(this).data('method');
+        let $text = $(this).data('role');
+        let $html = '<strong>Your are about to delete your '+ $text +' application! This action cannot be reversed!' +
+            '<br><span class="text-danger">Are you sure you want to proceed?</span></strong>';
+        swal({
+            type: "warning",
+            titleText: 'Delete Application',
+            html: $html,
+            input: 'password',
+            inputPlaceholder: 'Enter your Password',
+            confirmButtonText: '<i class="fa fa-trash-o"></i> Yes!',
+            cancelButtonText: '<i class="fa fa-undo"></i> No',
+            showCancelButton: true,
+            buttonsStyling: true,
+            confirmButtonColor: '#d33',
+            showLoaderOnConfirm: true,
+            inputValidator: (value)=> {
+                return new Promise((resolve, reject)=> {
+                    if (value) {
+                        // Confirm the password is correct and call the resolve
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: {user_validator: true, password: value}
+                        }).done((r)=>{r.user ? resolve() : reject('This password is incorrect!')}).fail((e)=>{reject('Please check your internet connection!')})
+                    } else {
+                        reject('This can\'t be blank')
+                    }
+                })
+            }
+        }).then(() => {
+            let $data = {
+                delete_application: true,
+                qualification_id: $(this).data('key')
+            };
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: $data,
+                beforeSend: ()=>{swal({ text: 'Deleting...', onOpen: ()=> {swal.showLoading()}})}
+            }).done(() =>{
+                swal({
+                    type: 'success',
+                    html: '<strong>Application Deleted!</strong>'
+                });
+                window.location.reload();
+            }).fail(() =>{
+                swal({
+                    type: 'error',
+                    html: '<strong>This action failed!</strong>'
+                })
+            });
+        })
+    });
+
+
+
+    /* Application Form behaviour on load */
+    let $appForms = $.find('form.applicationForm');
+    $.each($appForms, function ($id, $elem) {
+        let $inputs = $($elem).find('input[type=text]');
+        $.each($inputs, function ($id2, $elemI) {
+            localStorage.removeItem($($elemI).attr('id'));
+            // load from database and add to localStorage
+            let $code = $($elemI).val(); let $parent = $($elemI).parents('.form-group');
+            let formData = $($elemI).parents('form').serializeArray();
+            if ($code != '' && $code != null) {
+                $formProgrammeDetails($parent, $code, 'text-muted');
+                let $qualificationId = $(this).parents('form').attr('name');
+                let code1 = "";
+                let code2 = "";
+                let code3 = "";
+                let code4 = "";
+                try { code1 = formData[1].value ; } catch (e) { code1 = "";}
+                try { code2 = formData[2].value ; } catch (e) { code2 = "";}
+                try { code3 = formData[3].value ; } catch (e) { code3 = "";}
+                try { code4 = formData[4].value ; } catch (e) { code4 = "";}
+                // $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+                $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+            }
+        })
+    });
+
+
+    $(document).on('keypress', '.int-forms input', function (e) {
+        // if (isNaN(String.fromCharCode(e.which))) e.preventDefault();
+        // limit length
+        if($(this).val().length >= 7) e.preventDefault();
+    });
+
+
+    $(document).on('keyup', '.int-forms input', function (e) {
+        // convert to uppercase
+        $(this).val($(this).val().toUpperCase());
+        // get programme details if the specified length is met
+        let $code = $(this).val(); let $parent = $(this).parents('.form-group');
+        if($(this).val().length === 7){
+            // check if the you have applied for this programme in another section (Dealing with duplicates)
+            if ($allStorage().includes($code) && localStorage.getItem($(this).attr('id')) !== $code){
+                swal('Error!', 'You can only apply for a programme once!', 'error');
+                $(this).val('');
+            }else {
+                // Check if the field has a parent and whether the programme is similar to the parent
+                let $url = $(this).parents('form').attr('action');
+                let $field = $(this).attr('name');
+                $.ajax({
+                    url: $url,
+                    type: 'GET',
+                    data: {check_parent: true, field: $field}
+                }).done(($r)=>{
+                    // data returns the status of parent request and name of the parent field
+                    if ($r.has_parent){
+                        let $parentFd = $(document).find('input[name='+ $r.parent +']');
+                        // get the ID of the parent field
+                        let $parentId = $parentFd.attr('id');
+                        // Check if the parent has a correct value
+                        let $parentVal = localStorage.getItem($parentId);
+                        if ($parentVal != null){
+                            // continue to check for similarity
+                            $validateSimilar($url,$(this), $parent, $parentVal, $(this).val());
+                        }else{ // the parent value is empty/null
+                            swal('Error!', 'You have to fill choice '+ $r.parent_field_label +' first. Check the highlighted field', 'error');
+                            $$decor($parentFd);
+                        }
+                    }else if ($r.is_parent){
+                        // validate the field first
+                        $formProgrammeDetails($parent, $code, 'text-muted');
+                        let $qualificationId = $(this).parents('form').attr('name');
+                        let formData = $(this).parents('form').serializeArray();
+                        let code1 = "";
+                        let code2 = "";
+                        let code3 = "";
+                        let code4 = "";
+                        try { code1 = formData[1].value ; } catch (e) { code1 = "";}
+                        try { code2 = formData[2].value ; } catch (e) { code2 = "";}
+                        try { code3 = formData[3].value ; } catch (e) { code3 = "";}
+                        try { code4 = formData[4].value ; } catch (e) { code4 = "";}
+                        // $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+                        $validator($(this), $parent, $code, $qualificationId,code1, code2, code3, code4, false);
+                        // check if the field passed by checking for it in localStorage
+                        if (localStorage.getItem($(this).attr('id')) != null){
+                            $.each($r.children_fields, (k, childName)=> {
+                                // find the id of the child fields and if the fields were validated positively
+                                let $childFd = $(document).find('input[name='+ childName +']');
+                                let $childCode = localStorage.getItem($childFd.attr('id'));
+                                if ($childCode != null){
+                                    $validateSimilar($url, $childFd, $childFd.parents('.form-group'), $(this).val(), $childCode);
+                                }else if ($childFd.val() !== '' || $childFd.val() != null){ // if the field has not been validated and is not null
+                                    $formProgrammeDetails($childFd.parents('.form-group'), $childFd.val(), 'text-muted');
+                                    let $qualificationId = $childFd.parents('form').attr('name');
+                                    let formData = $childFd.parents('form').serializeArray();
+                                    let code1 = "";
+                                    let code2 = "";
+                                    let code3 = "";
+                                    let code4 = "";
+                                    try { code1 = formData[1].value ; } catch (e) { code1 = "";}
+                                    try { code2 = formData[2].value ; } catch (e) { code2 = "";}
+                                    try { code3 = formData[3].value ; } catch (e) { code3 = "";}
+                                    try { code4 = formData[4].value ; } catch (e) { code4 = "";}
+                                    // $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+                                    $validator($childFd, $childFd.parents('.form-group'), $childFd.val(), $qualificationId,code1, code2, code3, code4, false);
+                                    let $childCode = localStorage.getItem($childFd.attr('id'));
+                                    $validateSimilar($url, $childFd, $childFd.parents('.form-group'), $(this).val(), $childCode);
+                                }
+                            })
+                        }
+                    }
+                    else{
+                        $formProgrammeDetails($parent, $code, 'text-muted');
+                        let $qualificationId = $(this).parents('form').attr('name');
+                        let formData = $(this).parents('form').serializeArray();
+                        let code1 = "";
+                        let code2 = "";
+                        let code3 = "";
+                        let code4 = "";
+                        try { code1 = formData[1].value ; } catch (e) { code1 = "";}
+                        try { code2 = formData[2].value ; } catch (e) { code2 = "";}
+                        try { code3 = formData[3].value ; } catch (e) { code3 = "";}
+                        try { code4 = formData[4].value ; } catch (e) { code4 = "";}
+                        // $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+                        $validator($(this), $parent, $code, $qualificationId,code1, code2, code3, code4);
+                    }
+                });
+                /* helper */
+                function $validateSimilar($url, $elem, $parent, $parentCode, $childCode) {
+                    // receive a url, the element to be validated, its parent to decorate, the parent code input and the child code input
+                    $.ajax({
+                        url: $url,
+                        type: 'GET',
+                        data: {check_similar: true, parent_code: $parentCode, child_code: $childCode}
+                    }).done(($r)=>{
+                        if(!$r.similar){
+                            $$decor($elem, $r.error);
+                            localStorage.removeItem($elem.attr('id'));
+                        }else{
+                            // the programmes are similar
+                            $formProgrammeDetails($parent, $childCode, 'text-muted');
+                            let $qualificationId = $elem.parents('form').attr('name');
+                            let formData = $($elem).parents('form').serializeArray();
+                            let code1 = "";
+                            let code2 = "";
+                            let code3 = "";
+                            let code4 = "";
+                            try { code1 = formData[1].value ; } catch (e) { code1 = "";}
+                            try { code2 = formData[2].value ; } catch (e) { code2 = "";}
+                            try { code3 = formData[3].value ; } catch (e) { code3 = "";}
+                            try { code4 = formData[4].value ; } catch (e) { code4 = "";}
+                            // $validator($(this), $parent, $code, $qualificationId, code1, code2, code3, code4);
+                            $validator($elem, $parent, $childCode, $qualificationId,code1, code2, code3, code4, null, true);
+                        }
+                    });
+                }
+                /*******/
+
+            }
+        }else{
+            //clear the field
+            $formProgrammeDetailsClear($parent);
+            $formValidationDetailClear($parent);
+            localStorage.removeItem($(this).attr('id'));
+        }
+    });
+
+    // clear the field on clicking the delete icon
+    $(document).on('click', '.reset', function (e) {
+        $(this).siblings('input').val('');
+        localStorage.removeItem($(this).siblings('input').attr('id'));
+        // clear the the details section
+        $formProgrammeDetailsClear($(this).parents('.form-group'));
+        $formValidationDetailClear($(this).parents('.form-group'));
+        $(this).trigger('change');
+        $(this).siblings('input').trigger('change')
+    });
+
+
+    // prevent copy and paste and context menu
+    $('.int-forms input').bind("cut copy paste contextmenu", function (e) {
+        e.preventDefault();
+    });
+
+
+    function $sequenceSubmit($url, $data){
+        // submit the processing option
+        $data['sequence_submit'] = true;
+        $.ajax({url:$url, type: 'POST', data: $data}).done(()=>{window.location.reload()});
+    }
+
+
+    function $sharingSubmit($url, $data){
+        // submit the processing sharing
+        $data['sharing_submit'] = true;
+        $.ajax({url:$url, type: 'POST', data: $data}).done(()=>{
+            console.log('Saved sharing')
+        });
+    }
+
+
+    function $noScholarshipSubmit($url, $data){
+        // submit the processing no scholarship
+        $data['no_scholarship_submit'] = true;
+        $.ajax({url:$url, type: 'POST', data: $data}).done(()=>{
+            console.log('Saved no scholarship')
+        });
+    }
+
+
+
+    $(document).on('submit', '#sequenceChange', function(e){
+        e.preventDefault();
+        let $url = $(this).attr('action');
+        let $data = $(this).serializeArray();
+        let $sequenceSubmission = {};
+        // find the option
+        $.each($data, (k, v)=>{
+            $sequenceSubmission[v.name] = v.value;
+        });
+        swal({
+            type: 'warning',
+            titleText: 'Processing Change',
+            html: 'Your\'re about to change your application consideration option. Enter your password to proceed',
+            input: 'password',
+            inputPlaceholder: 'Enter your Password',
+            confirmButtonText: '<i class="fa fa-refresh"></i> Change',
+            cancelButtonText: '<i class="fa fa-close"></i> Cancel',
+            showCancelButton: true,
+            buttonsStyling: true,
+            confirmButtonColor: '#26c359',
+            showLoaderOnConfirm: true,
+            inputValidator: (value)=> {
+                return new Promise((resolve, reject)=> {
+                    if (value) {
+                        // Confirm the password is correct and call the resolve
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: {user_validator: true, password: value}
+                        }).done((r)=>{r.user ? resolve() : reject('This password is incorrect!')}).fail((e)=>{reject('Please check your internet connection!')})
+                    } else {
+                        reject('This can\'t be blank')
+                    }
+                })
+            }
+
+        }).then(()=>{$sequenceSubmit($url, $sequenceSubmission)});
+
+    });
+
+    $(document).on('submit', '.applicationForm', function (e) {
+        e.preventDefault();
+        let $formAction = $(this).attr('action');
+        let $formData = $(this).attr('name');
+        let $choiceData = {};
+        let $choiceData1 = {};
+        let $status = [];
+        let $nonMan = $(this).find('input[type=text]');
+
+
+         $.each($nonMan, function ($id, $elem) {
+             if ($($elem).val() != '' ) $choiceData1[$($elem).attr('name').split('_')[1]] = $($elem).val();
+
+        });
+
+        /* Helper Functions */
+        function $submitChoices($url, $submission, $sharingSubmission= null, $sequenceSubmission = null){
+            // check payment
+            $.ajax({
+                url: $url, type: 'GET', data: {check_payment: true, submission: $formData, nonMan: $choiceData1}, beforeSend: ()=>{swal({ text: 'Please wait for the next step...', onOpen: ()=> {swal.showLoading()}})}
+            }).done((response) => {
+                let $data = JSON.parse(response);
+
+
+                if(!$data['scholarship']){
+                    // Start submit no scholarship and choices
+
+
+
+                    swal({
+                              title: 'Are you sure?',
+                              text: $data['comment_scholarship'],
+                              icon: 'warning',
+                              showCancelButton: true,
+                              confirmButtonColor: '#3085d6',
+                              cancelButtonColor: '#d33',
+                              confirmButtonText: 'I Agree'
+                            }).then((result) => {
+                                console.log(result);
+                              if (result) {
+
+                            if ($data['exempt']){ // start pick
+                    // submit the choices
+                    $submission['final_submit'] = true; $submission['qualification_id'] = $formData;
+                    $.ajax({url: $url, type: 'POST', data: $submission, beforeSend: ()=>{swal({ text: 'Submitting your choices...', onOpen: ()=> {swal.showLoading()}})}}).done(function (response) {
+                        // swal('Successful!', 'Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.', 'success');
+                        swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                        // if there is sequence choice update
+                        $noScholarshipSubmit($formAction, {option: true});
+                        $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                        $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+
+                    }).fail(()=>{
+                        swal('Error!', 'Please check your internet connection', 'error')
+
+                    });
+                }else {
+                    let $payment = $data['paid'];
+                    let $amountDue = $data['amount_due'];
+                    let $ecitizenIframe = $data['html'];
+                    let $e_citizen = $data['e_citizen'];
+                        // console.log($e_citizen);
+                        // Start of ecitizen iframe
+                    if ($amountDue>0){
+                        let iframe = document.createElement('iframe');
+                        // iframe.src = 'data:text/html;charset=utf-8,' + encodeURI($e_citizen.invoice_link);
+                        iframe.src = $data['prod_url'];
+                        // iframe.srcdoc = $ecitizenIframe;
+                        iframe.sandbox = 'allow-same-origin allow-scripts allow-popups allow-forms';
+                        iframe.width = "98%";
+                        iframe.height = "400";
+                        // document.body.appendChild(iframe);
+                        // console.log(encodeURI($ecitizenIframe));
+                        // $("div.ecitizenPayment").html($ecitizenIframe);
+                        swal({
+                        title: 'Make Payment through e-Citizen',
+                        // text: $ecitizenIframe,
+                        inputClass: 'form-control',
+                        confirmButtonText: 'I have paid',
+                        showCancelButton: true,
+                        buttonsStyling: true,
+                        confirmButtonColor: '#32CD32',
+                        cancelButtonColor: '#d33',
+                        showLoaderOnConfirm: true,
+                        html: iframe,
+                            width: '90%'
+                    }).then(()=>{
+
+
+
+                    // let $html = $amountDue<= 0 ? '<strong>You have already made the MPESA payment. Enter the Transaction Code below</strong>' :
+                    //     '<strong>Please pay <span class="text-warning">' + $amountDue.toLocaleString() + '</span> to <span class="text-success">Paybill 820201</span>. Your Account Number is <span class="text-info">' + $studentID + '</span>. Enter the Transaction Code below';
+                    // $html = $html + ' By submitting your application you agree to <a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a>';
+                    //
+
+                    let $html = $amountDue<= 0 ? '<strong>You have already made the Service payment. </br> Enter the Payment REF in the field provided. </strong> </br>' :
+                        '<strong>Click <a target="_blank" href="/pesaflow/"> HERE </a> to Pay </span> <span class="text-warning"> Ksh ' + $amountDue.toLocaleString() + '</br>Enter the Payment REF in the field provided.';
+                    $html = '<strong>Enter the e-Citizen Payment REF in the field provided. </strong> </br>' + '</br>By submitting your application you agree to <small><a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a></small> ';
+                    swal({
+                        title: 'Submit Payment',
+                        html: $html,
+                        input: 'text',
+                        inputPlaceholder: 'Enter eCitizen Account No or eCitizen Payment Ref',
+                        inputClass: 'form-control',
+                        confirmButtonText: 'Submit',
+                        showCancelButton: true,
+                        buttonsStyling: true,
+                        confirmButtonColor: '#32CD32',
+                        cancelButtonColor: '#d33',
+                        showLoaderOnConfirm: true,
+                        inputValidator: function (value) {
+                            return new Promise(function (resolve, reject) {
+                                if (value) {
+                                    resolve()
+                                } else {
+                                    reject('This can\'t be blank')
+                                }
+                            })
+                        }
+                    }).then(($mpesaCode)=>{
+                        // send the mpesa code
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: {transaction_code: $mpesaCode, qualification_data:$choiceData1},
+                            beforeSend: () => {swal({ text: 'Checking Payment...', onOpen: ()=> {swal.showLoading()}})}
+                        }).done((response)=>{
+                            // close the loading message
+                            swal.close();
+                            // if the payment was found and amount not  paid in full
+                            if (response['type'] === 'success' && response['amount_due'] > 0) {
+                                swal({title: response['type'], text: response['message'] + ' Amount Due: ' + response['amount_due'], type: response['type'], showCancelButton: true});
+                            } else if (response['type'] === 'success' && response['amount_due'] <= 0) { // the payment was found and payment not paid in full
+                                // submit the choices
+                                $submission['final_submit'] = true; $submission['qualification_id'] = $formData;
+                                $.ajax({url: $url, type: 'POST', data: $submission, beforeSend: ()=>{swal({ text: 'Submitting your choices...', onOpen: ()=> {swal.showLoading()}})}}).done(function (response) {
+                                    // swal('Successful!', 'Application Updated! Kindly tell us your application process experience from the link above.', 'success');
+                                    swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                                    // if there is sequence choice update
+                                    $noScholarshipSubmit($formAction, {option: true});
+                                    $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                                    $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+                                }).fail(()=>{
+                                    swal('Error!', 'Please check your internet connection', 'error')
+                                });
+                            }else{ // the payment was not found
+                                swal({title: response['type'], text: response['message'], type: response['type'], showCancelButton: true});
+                            }
+                        }).fail(()=>{
+                            swal('Error!', 'Please check your internet connection', 'error')
+                        })
+                    }) // End of Mpesa check and submission -- great
+
+
+                                    })
+
+
+
+
+                                // End of ecitizen Iframe
+                        // document.getElementById('ecitizenPayment').appendChild(iframe);
+                        // $('#my-payment-modal').modal('show');
+                        // console.log($amountDue);
+                    }else{
+
+
+
+
+                    // let $html = $amountDue<= 0 ? '<strong>You have already made the MPESA payment. Enter the Transaction Code below</strong>' :
+                    //     '<strong>Please pay <span class="text-warning">' + $amountDue.toLocaleString() + '</span> to <span class="text-success">Paybill 820201</span>. Your Account Number is <span class="text-info">' + $studentID + '</span>. Enter the Transaction Code below';
+                    // $html = $html + ' By submitting your application you agree to <a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a>';
+                    //
+
+                    let $html = $amountDue<= 0 ? '<strong>You have already made the Service payment. </br> Enter the Payment REF in the field provided. </strong> </br>' :
+                        '<strong>Click <a target="_blank" href="/pesaflow/"> HERE </a> to Pay </span> <span class="text-warning"> Ksh ' + $amountDue.toLocaleString() + '</span>.</br>Enter the Payment REF in the field provided.';
+                    $html = $html + '</br>By submitting your application you agree to <small><a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a></small> ';
+                    swal({
+                        title: 'Submit Payment',
+                        html: $html,
+                        input: 'text',
+                        inputPlaceholder: 'Enter eCitizen Account No or eCitizen Payment Ref',
+                        inputClass: 'form-control',
+                        confirmButtonText: 'Submit',
+                        showCancelButton: true,
+                        buttonsStyling: true,
+                        confirmButtonColor: '#32CD32',
+                        cancelButtonColor: '#d33',
+                        showLoaderOnConfirm: true,
+                        inputValidator: function (value) {
+                            return new Promise(function (resolve, reject) {
+                                if (value) {
+                                    resolve()
+                                } else {
+                                    reject('This can\'t be blank')
+                                }
+                            })
+                        }
+                    }).then(($mpesaCode)=>{
+                        // send the mpesa code
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: {transaction_code: $mpesaCode, qualification_data:$choiceData1},
+                            beforeSend: () => {swal({ text: 'Checking Payment...', onOpen: ()=> {swal.showLoading()}})}
+                        }).done((response)=>{
+                            // close the loading message
+                            swal.close();
+                            // if the payment was found and amount not  paid in full
+                            if (response['type'] === 'success' && response['amount_due'] > 0) {
+                                swal({title: response['type'], text: response['message'] + ' Amount Due: ' + response['amount_due'], type: response['type'], showCancelButton: true});
+                            } else if (response['type'] === 'success' && response['amount_due'] <= 0) { // the payment was found and payment not paid in full
+                                // submit the choices
+                                $submission['final_submit'] = true; $submission['qualification_id'] = $formData;
+                                $.ajax({url: $url, type: 'POST', data: $submission, beforeSend: ()=>{swal({ text: 'Submitting your choices...', onOpen: ()=> {swal.showLoading()}})}}).done(function (response) {
+                                    // swal('Successful!', 'Application Updated! Kindly tell us your application process experience from the link above.', 'success');
+                                    swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                                    // if there is sequence choice update
+                                    $noScholarshipSubmit($formAction, {option: true});
+                                    $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                                    $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+                                }).fail(()=>{
+                                    swal('Error!', 'Please check your internet connection', 'error')
+                                });
+                            }else{ // the payment was not found
+                                swal({title: response['type'], text: response['message'], type: response['type'], showCancelButton: true});
+                            }
+                        }).fail(()=>{
+                            swal('Error!', 'Please check your internet connection', 'error')
+                        })
+                    }) // End of Mpesa check and submission -- great
+
+
+
+                        } // end else for no payment required
+
+
+
+
+
+
+                }   // End Pick
+
+
+
+                              } else {
+                            swal("Cancelled", "Check your programmes again and submit", "error");
+                          }
+                        });
+
+
+
+
+
+                        // });
+
+
+
+
+                    // Start submit no scholarship and choices
+                }
+                else{
+
+
+
+
+
+
+
+
+                    if ($data['exempt']){ // start pick
+                    // submit the choices
+                    $submission['final_submit'] = true; $submission['qualification_id'] = $formData;
+                    $.ajax({url: $url, type: 'POST', data: $submission, beforeSend: ()=>{swal({ text: 'Submitting your choices...', onOpen: ()=> {swal.showLoading()}})}}).done(function (response) {
+                        // swal('Successful!', 'Application Updated! Kindly tell us your application process experience from the link above.', 'success');
+                        swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                        // if there is sequence choice update
+                        $noScholarshipSubmit($formAction, {option: true});
+                        $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                        $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+                    }).fail(()=>{
+                        swal('Error!', 'Please check your internet connection', 'error')
+                    });
+                }else {
+                    let $payment = $data['paid'];
+                    let $amountDue = $data['amount_due'];
+
+                    let $ecitizenIframe = $data['html'];
+                    let $e_citizen = $data['e_citizen'];
+                        // console.log($e_citizen);
+                        // Start of ecitizen iframe
+                    if ($amountDue>0){
+                        let iframe = document.createElement('iframe');
+                        // iframe.src = 'data:text/html;charset=utf-8,' + encodeURI($e_citizen.invoice_link);
+                        iframe.src = $data['prod_url'];
+                        // iframe.srcdoc = $ecitizenIframe;
+                        iframe.sandbox = 'allow-same-origin allow-scripts allow-popups allow-forms';
+                        iframe.width = "98%";
+                        iframe.height = "400";
+                        // document.body.appendChild(iframe);
+                        // console.log(encodeURI($ecitizenIframe));
+                        // $("div.ecitizenPayment").html($ecitizenIframe);
+                        swal({
+                            title: 'Make Payment through e-Citizen',
+                            // text: $ecitizenIframe,
+                            inputClass: 'form-control',
+                            confirmButtonText: 'I have paid',
+                            showCancelButton: true,
+                            buttonsStyling: true,
+                            confirmButtonColor: '#32CD32',
+                            cancelButtonColor: '#d33',
+                            showLoaderOnConfirm: true,
+                            html: iframe,
+                            width: '90%'
+                        }).then(() => {
+                            // let $html = $amountDue<= 0 ? '<strong>You have already made the MPESA payment. Enter the Transaction Code below</strong>' :
+                            //     '<strong>Please pay <span class="text-warning">' + $amountDue.toLocaleString() + '</span> to <span class="text-success">Paybill 820201</span>. Your Account Number is <span class="text-info">' + $studentID + '</span>. Enter the Transaction Code below';
+                            // $html = $html + ' By submitting your application you agree to <a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a>';
+                            //
+                            let $html = $amountDue <= 0 ? '<strong>You have already made the Service payment. </br> Enter the Payment REF in the field provided. </strong> </br>' :
+                                '<strong>Click <a target="_blank" href="/pesaflow/"> HERE </a> to Pay </span> <span class="text-warning"> Ksh ' + $amountDue.toLocaleString() + '</span>.</br>Enter the Payment REF in the field provided.';
+                            $html = 'Enter the e-Citizen Payment REF in the field provided.' + '</br>By submitting your application you agree to <small><a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a></small> ';
+                            swal({
+                                title: 'Submit Payment',
+                                html: $html,
+                                input: 'text',
+                                inputPlaceholder: 'Enter eCitizen Account No or eCitizen Payment Ref',
+                                inputClass: 'form-control',
+                                confirmButtonText: 'Submit',
+                                showCancelButton: true,
+                                buttonsStyling: true,
+                                confirmButtonColor: '#32CD32',
+                                cancelButtonColor: '#d33',
+                                showLoaderOnConfirm: true,
+                                inputValidator: function (value) {
+                                    return new Promise(function (resolve, reject) {
+                                        if (value) {
+                                            resolve()
+                                        } else {
+                                            reject('This can\'t be blank')
+                                        }
+                                    })
+                                }
+                            }).then(($mpesaCode) => {
+                                // send the mpesa code
+                                $.ajax({
+                                    url: $url,
+                                    type: 'POST',
+                                    data: {transaction_code: $mpesaCode, qualification_data:$choiceData1},
+                                    beforeSend: () => {
+                                        swal({
+                                            text: 'Checking Payment...', onOpen: () => {
+                                                swal.showLoading()
+                                            }
+                                        })
+                                    }
+                                }).done((response) => {
+                                    // close the loading message
+                                    swal.close();
+                                    // if the payment was found and amount not  paid in full
+                                    if (response['type'] === 'success' && response['amount_due'] > 0) {
+                                        swal({
+                                            title: response['type'],
+                                            text: response['message'] + ' Amount Due: ' + response['amount_due'],
+                                            type: response['type'],
+                                            showCancelButton: true
+                                        });
+                                    } else if (response['type'] === 'success' && response['amount_due'] <= 0) { // the payment was found and payment not paid in full
+                                        // submit the choices
+                                        $submission['final_submit'] = true;
+                                        $submission['qualification_id'] = $formData;
+                                        $.ajax({
+                                            url: $url, type: 'POST', data: $submission, beforeSend: () => {
+                                                swal({
+                                                    text: 'Submitting your choices...', onOpen: () => {
+                                                        swal.showLoading()
+                                                    }
+                                                })
+                                            }
+                                        }).done(function (response) {
+                                            // swal('Successful!', 'Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.', 'success');
+                                            swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                                            // if there is sequence choice update
+                                            $noScholarshipSubmit($formAction, {option: true});
+                                            $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                                            $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+                                        }).fail(() => {
+                                            swal('Error!', 'Please check your internet connection', 'error')
+                                        });
+                                    } else { // the payment was not found
+                                        swal({
+                                            title: response['type'],
+                                            text: response['message'],
+                                            type: response['type'],
+                                            showCancelButton: true
+                                        });
+                                    }
+                                }).fail(() => {
+                                    swal('Error!', 'Please check your internet connection', 'error')
+                                })
+                            })
+                        }) // End ecitizen Payment
+
+
+                    }else{
+                        // Already paid person
+
+                        let $html = $amountDue<= 0 ? '<strong>You have already made the Service payment. </br> Enter the Payment REF in the field provided. </strong> </br>' :
+                        '<strong>Click <a target="_blank" href="/pesaflow/"> HERE </a> to Pay </span> <span class="text-warning"> Ksh ' + $amountDue.toLocaleString() + '</span>.</br>Enter the Payment REF in the field provided.';
+                    $html = $html + '</br>By submitting your application you agree to <small><a target="_blank" href="https://www.kuccps.net/sites/default/files/2025-01/KUCCPS%20ONLINE%20PRIVACY%20STATEMENT.pdf">KUCCPS privacy policy</a></small> ';
+                    swal({
+                        title: 'Submit Payment',
+                        html: $html,
+                        input: 'text',
+                        inputPlaceholder: 'Enter eCitizen Account No or eCitizen Payment Ref',
+                        inputClass: 'form-control',
+                        confirmButtonText: 'Submit',
+                        showCancelButton: true,
+                        buttonsStyling: true,
+                        confirmButtonColor: '#32CD32',
+                        cancelButtonColor: '#d33',
+                        showLoaderOnConfirm: true,
+                        inputValidator: function (value) {
+                            return new Promise(function (resolve, reject) {
+                                if (value) {
+                                    resolve()
+                                } else {
+                                    reject('This can\'t be blank')
+                                }
+                            })
+                        }
+                    }).then(($mpesaCode)=>{
+                        // send the mpesa code
+                        $.ajax({
+                            url: $url,
+                            type: 'POST',
+                            data: {transaction_code: $mpesaCode, qualification_data:$choiceData1},
+                            beforeSend: () => {swal({ text: 'Checking Payment...', onOpen: ()=> {swal.showLoading()}})}
+                        }).done((response)=>{
+                            // close the loading message
+                            swal.close();
+                            // if the payment was found and amount not  paid in full
+                            if (response['type'] === 'success' && response['amount_due'] > 0) {
+                                swal({title: response['type'], text: response['message'] + ' Amount Due: ' + response['amount_due'], type: response['type'], showCancelButton: true});
+                            } else if (response['type'] === 'success' && response['amount_due'] <= 0) { // the payment was found and payment not paid in full
+                                // submit the choices
+                                $submission['final_submit'] = true; $submission['qualification_id'] = $formData;
+                                $.ajax({url: $url, type: 'POST', data: $submission, beforeSend: ()=>{swal({ text: 'Submitting your choices...', onOpen: ()=> {swal.showLoading()}})}}).done(function (response) {
+                                    // swal('Successful!', 'Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.', 'success');
+                                    swal({
+                                          title: "Successful!",
+                                          text: "Application Updated! The application will be processed on merit after the deadline and the outcome will be displayed on this portal. Kindly tell us your application process experience from the link above.",
+                                          type: "success",
+                                          timer: 5000
+                                        });
+                                    // if there is sequence choice update
+                                    $noScholarshipSubmit($formAction, {option: true});
+                                    $sharingSubmission ? $sharingSubmit($formAction, $sharingSubmission) : console.log('Sharing not captured');
+                                    $sequenceSubmission ? $sequenceSubmit($formAction, $sequenceSubmission) : window.location = '/';
+                                }).fail(()=>{
+                                    swal('Error!', 'Please check your internet connection', 'error')
+                                });
+                            }else{ // the payment was not found
+                                swal({title: response['type'], text: response['message'], type: response['type'], showCancelButton: true});
+                            }
+                        }).fail(()=>{
+                            swal('Error!', 'Please check your internet connection', 'error')
+                        })
+                    })
+
+
+                    }
+
+                }   // End Pick
+
+
+
+
+
+
+
+
+                }
+
+
+
+
+            })
+        }
+        /********************/
+
+
+        // Get the form fields and check if the data is correct and as set in localStorage
+        $.each($nonMan, function ($id, $elem) {
+            if (!$($elem).attr('required') && $($elem).val() != '' && $($elem).val() != localStorage.getItem($($elem).attr('id'))){
+                $$decor($elem);
+                $status.push(false);
+            }else if ($($elem).attr('required') && ($($elem).val() === '' || $($elem).val() != localStorage.getItem($($elem).attr('id')))){
+                $$decor($elem);
+                $status.push(false)
+            }else{
+                $status.push(true);
+                if ($($elem).val() != '' ) $choiceData[$($elem).attr('name').split('_')[1]] = $($elem).val();
+            }
+        });
+        // check if the there are any errors
+        if ($status.includes(false)){
+            // inform user of their errors
+            swal('Error!', 'Please check the highlighted fields!', 'error')
+        }else {
+            // Consent for sharing
+            let $sharing_choice = {option: 'None'};
+
+            let $sharing_inputs = {
+                      // 'with_scholarship': 'Institutions with Government scholarship',
+                      // 'without_scholarship': 'Institutions without Government scholarship',
+                      // 'same_programme_in_other_institutions': 'Same Programme In Other Institutions',
+                      // 'any_programme_in_any_institution': 'Any Programme In Any Institution',
+                      //   'do_not_share': 'None'
+                            'yes' : 'Yes',
+                                'no' : 'No - You will not be placed if you miss in all of your selected choices'
+                    };
+
+                swal({
+                                title: 'Placement Processing',
+                                html: '<p>Would you like to be placed in any other programme in case you don\'t secure your choices?' +
+                                '</p>',
+                                input: 'radio',
+                                inputOptions: $sharing_inputs,
+                                confirmButtonText: 'Submit',
+                                confirmButtonColor: '#32CD32',
+                                inputValidator: ($value)=> {
+                                    return new Promise((resolve, reject)=>{
+                                        $value ? resolve() : reject('You need to choose one')
+                                    })
+                                }
+                            }).then(($value)=>{
+                                // create the sequence submission data
+                                $sharing_choice = {option: $value};
+                                console.log($sharing_choice)
+                                // $submitChoices($formAction, $choiceData, $seqData);
+
+
+
+
+            // confirm if the student has another application within the same period
+            $.ajax({
+                url: $formAction,
+                type: 'GET',
+                data: {application_count: true, submission: $formData},
+                beforeSend: () => {
+                    swal({
+                        text: 'Please wait as we confirm something...',
+                        onOpen: function () {
+                            swal.showLoading()
+                        }
+                    });
+                }
+            }).done(function (response) {
+                count = response['applications'];
+                // check if there are other applications
+                if (count){
+                    // prompt the user for the opt-in or opt-out feature
+                    $.ajax({
+                        url: $formAction,
+                        type: 'GET',
+                        data: {sequence_options: true}
+                    }).done((response)=>{
+                        if(response.in){
+                            let $in = response.in;
+                            if ($in){
+                                $submitChoices($formAction, $choiceData, $sharing_choice);
+                            }
+                        }else{
+                            let $data = JSON.parse(response);
+                            let $options = {};
+                            $.each($data, (k, v)=>{
+                                $options[v.pk] = v.fields.option_name;
+                            });
+                            swal({
+                                title: 'Applied in two categories',
+                                html: '<p>You have applied to programmes in two <a href="/applications/#mcc">categories</a>?. Would you like to be considered for both?' +
+                                '</p>',
+                                input: 'radio',
+                                inputOptions: $options,
+                                confirmButtonText: 'Submit',
+                                confirmButtonColor: '#32CD32',
+                                inputValidator: ($value)=> {
+                                    return new Promise((resolve, reject)=>{
+                                        $value ? resolve() : reject('You need to choose one')
+                                    })
+                                }
+                            }).then(($value)=>{
+                                // create the sequence submission data
+                                let $seqData = {option: $value};
+                                $submitChoices($formAction, $choiceData, $sharing_choice, $seqData);
+                            });
+                        }
+
+                    }).fail(()=>{swal('Error!', 'Please check your internet connection', 'error')});
+
+                }else{
+                    // there are no applications hence proceed with applications
+                    /* proceed with submission */
+                    $submitChoices($formAction, $choiceData, $sharing_choice);
+                }
+            }).fail(function (error) {
+                swal('Error!', 'Please check your internet connection', 'error')
+            })
+                     }); //// End My Sharing Check
+        }
+    });
+
+
+    /* helper functions */
+    function $$decor($element, $messageParam = null) {
+        let $message = $messageParam == null ? "This field is incomplete!" : $messageParam;
+        let $markup = "<small class='help-block text-uppercase m-b-0'>" + $message + "</small>";
+        let $parent = $($element).parents('.form-group');
+        $formValidationDetailClear($parent);
+        $parent.append($markup).addClass('has-error');
+    }
+
+    /*
+     * Get the name of a programme and the institution based on the code
+     */
+    function $formProgrammeDetails($parent, $code, $extraClasses = null) {
+        $.ajax({
+            url: '/api/auth/',
+            type: 'GET',
+            data: {name_code: $code},
+            beforeSend: function () {
+                let $markup = "<small class='form-text text-uppercase " + $extraClasses + "'>Fetching Data...</small>";
+                $parent.append($markup);
+            }
+        }).done(function (response) {
+            let dataObj = JSON.parse(response);
+            let $text = dataObj['name'] + " @ " + dataObj['institution'];
+            let $markup = "<small class='form-text text-uppercase " + $extraClasses + "'>" + $text + "</small>";
+            $formProgrammeDetailsClear($parent);
+            $parent.append($markup);
+        });
+    }
+
+    function $formProgrammeDetailsClear($parent, $elem = null){
+        $parent.children('.form-text').remove(); // remove the programme details
+    }
+
+    function $formValidationDetailClear($parent, $elem = null) {
+        $parent.children('.help-block').remove(); // remove the validation details
+        $parent.removeClass('has-error').removeClass('has-success') // remove the decorator classes
+    }
+
+
+    function $validator($elem, $parent, $code, $qualificationId,$c_1, $c_2, $c_3, $c_4, $asyncState = null, $toStorage = null) {
+        let $aState = $asyncState != null ? $asyncState : true;
+        let $aStorage = $toStorage != null ? $toStorage : true;
+        let $data = {
+            'qualification_id': $qualificationId,
+            'requirements_check': true,
+            'choice': $code,
+            'c1': $c_1,
+            'c2': $c_2,
+            'c3': $c_3,
+            'c4': $c_4
+        };
+        //let $status = false;
+        // confirm all requirements have been met
+        $.ajax({
+            url: '/api/auth/',
+            type: 'GET',
+            data: $data,
+            async: $aState,
+            beforeSend: function () {
+                let $markup = "<small class='help-block text-uppercase m-b-0'>Checking requirements...</small>";
+                $parent.append($markup);
+            }
+        }).done(function (response) {
+            // dataObj = JSON.parse(response);
+            dataObj = response;
+            $parent.children('.help-block').remove();
+            let $message = dataObj[2];
+            let $markup = "<small class='help-block text-uppercase m-b-0'>" + $message + "</small>";
+            $parent.append($markup);
+            if ($aStorage){
+                if (dataObj[1]) {
+                    $parent.removeClass('has-error').addClass('has-success');
+                    localStorage.setItem($elem.attr('id'), $code);
+                } else {
+                    $parent.removeClass('has-success').addClass('has-error');
+                    localStorage.removeItem($elem.attr('id'));
+                }
+            }else{
+                $parent.removeClass('has-success').addClass('has-error');
+                localStorage.removeItem($elem.attr('id'));
+            }
+        }).fail(function (error) {
+            // swal('Error!', 'The connection timeout. Please check your internet connection', 'error');
+        });
+    }
+
+});
