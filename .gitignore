@@ -1,5 +1,18 @@
-.env
-data/
-.venv/
+# Virtual environment
+venv/
+
+# Chrome profile cache
+chrome_profile_for_scraper/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+
+# Python-specific files
 __pycache__/
 
+# Log files
+*.log
